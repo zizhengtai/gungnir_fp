@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](./LICENSE)
 
-Gungnir is a modern C++ library for functional programming.
+Gungnir is a C++ library for functional programming.
 
 ## License
 
