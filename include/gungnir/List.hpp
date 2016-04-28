@@ -145,7 +145,7 @@ private:
 
     class Node final {
     private:
-        static class Priv final {} priv_;
+        static const class Priv final {} priv_;
 
     public:
         static Ptr<Node> create()
@@ -183,6 +183,9 @@ private:
 
     Ptr<Node> node_;
 };
+
+template<typename A>
+const typename List<A>::Node::Priv List<A>::Node::priv_{};
 
 }  // namespace gungnir
 

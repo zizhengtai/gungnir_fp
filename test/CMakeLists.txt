@@ -7,4 +7,5 @@ add_executable(test_all
   test_all.cpp
   test_list_constructors.cpp
   test_list_foreach.cpp
+  test_list_map.cpp
 )
