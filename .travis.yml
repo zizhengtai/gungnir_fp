@@ -89,7 +89,6 @@ matrix:
 
 before_script:
   - export CXX="$COMPILER"
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update && brew install cmake; fi
 
 script:
   - cd test && cmake . && make
