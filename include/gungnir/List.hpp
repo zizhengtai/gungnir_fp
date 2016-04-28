@@ -5,6 +5,7 @@
 #include <functional>
 #include <iterator>
 #include <memory>
+#include <stdexcept>
 #include <type_traits>
 #include <vector>
 
@@ -60,11 +61,17 @@ public:
 
     const A & head() const
     {
+        if (isEmpty()) {
+            throw std::out_of_range("head of empty list");
+        }
         return *(node_->head);
     }
 
     List tail() const
     {
+        if (isEmpty()) {
+            throw std::out_of_range("tail of empty list");
+        }
         return node_->tail;
     }
 
@@ -93,6 +100,16 @@ public:
         }
 
         return hd;
+    }
+
+    const A & operator[](std::size_t i) const
+    {
+        if (i >= size()) {
+            throw std::out_of_range("index out of range");
+        }
+        auto ptr = node_.get();
+        for (; i > 0; ptr = ptr->tail.get(), --i) {}
+        return *(ptr->head);
     }
 
 private:
