@@ -35,19 +35,22 @@ class List final {
 private:
     class Node;
 
+    template<typename T>
+    using Ptr = std::shared_ptr<const T>;
+
 public:
     List() noexcept : node_(Node::create())
     {}
 
     List(A x) noexcept
         : node_(Node::create(
-                    std::make_shared<A>(std::move(x)),
+                    std::make_shared<const A>(std::move(x)),
                     Node::create()))
     {}
 
     List(A head, List tail) noexcept
         : node_(Node::create(
-                    std::make_shared<A>(std::move(head)),
+                    std::make_shared<const A>(std::move(head)),
                     std::move(tail.node_)))
     {}
 
@@ -61,7 +64,7 @@ public:
         : List(std::move(head), List(std::forward<Args>(tail)...))
     {}
 
-    List(std::shared_ptr<const Node> node) noexcept : node_(std::move(node))
+    List(Ptr< Node> node) noexcept : node_(std::move(node))
     {}
 
     bool isEmpty() const
@@ -101,15 +104,15 @@ public:
     {
         const auto ff = std::bind(std::move(f), std::placeholders::_1);
 
-        std::vector<std::shared_ptr<const B>> buf;
+        std::vector<Ptr<B>> buf;
         buf.reserve(size());
 
         foreachImpl([&buf, &ff](const A &x) {
-            buf.emplace_back(std::make_shared<B>(ff(x)));
+            buf.emplace_back(std::make_shared<const B>(ff(x)));
         });
 
         using BN = typename List<B>::Node;
-        std::shared_ptr<const BN> hd = BN::create();
+        Ptr<BN> hd = BN::create();
         for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
             hd = BN::create(std::move(*it), std::move(hd));
         }
@@ -117,14 +120,23 @@ public:
         return hd;
     }
 
-    const A & operator[](std::size_t i) const
+    List reverse() const
     {
-        if (i >= size()) {
+        Ptr<Node> hd = Node::create();
+        for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
+            hd = Node::create(n->head, std::move(hd));
+        }
+        return hd;
+    }
+
+    const A & operator[](std::size_t index) const
+    {
+        if (index >= size()) {
             throw std::out_of_range("index out of range");
         }
-        auto ptr = node_.get();
-        for (; i > 0; ptr = ptr->tail.get(), --i) {}
-        return *(ptr->head);
+        auto n = node_.get();
+        for (; index > 0; n = n->tail.get(), --index) {}
+        return *(n->head);
     }
 
 private:
@@ -136,28 +148,29 @@ private:
         static class Priv final {} priv_;
 
     public:
-        static std::shared_ptr<Node> create()
+        static Ptr<Node> create()
         {
-            return std::make_shared<Node>(priv_);
+            return std::make_shared<const Node>(priv_);
         }
 
-        static std::shared_ptr<Node> create(std::shared_ptr<const A> head, std::shared_ptr<const Node> tail)
+        static Ptr<Node> create(Ptr<A> head, Ptr<Node> tail)
         {
-            return std::make_shared<Node>(priv_, std::move(head), std::move(tail));
+            return std::make_shared<const Node>(
+                priv_, std::move(head), std::move(tail));
         }
 
         Node(const Priv &) noexcept : size(0)
         {}
 
-        Node(const Priv &, std::shared_ptr<const A> head, std::shared_ptr<const Node> tail) noexcept
+        Node(const Priv &, Ptr<A> head, Ptr<Node> tail) noexcept
             : size(1 + tail->size)
             , head(std::move(head))
             , tail(std::move(tail))
         {}
 
         const std::size_t size;
-        const std::shared_ptr<const A> head;
-        const std::shared_ptr<const Node> tail;
+        const Ptr<A> head;
+        const Ptr<Node> tail;
     };
 
     template<typename Fn>
@@ -168,7 +181,7 @@ private:
         }
     }
 
-    std::shared_ptr<const Node> node_;
+    Ptr<Node> node_;
 };
 
 }  // namespace gungnir
