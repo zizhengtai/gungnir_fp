@@ -36,15 +36,13 @@ public:
     {}
 
     template<
-        typename A1,
         typename... Args,
         typename = typename std::enable_if<
-            std::is_convertible<A1, A>::value &&
             AllTrue<std::is_convertible<Args, A>::value...>::value
         >::type
     >
-    List(A1 &&head, Args&&... args) noexcept
-        : List(std::forward<A1>(head), List(std::forward<Args>(args)...))
+    List(A head, Args&&... tail) noexcept
+        : List(std::move(head), List(std::forward<Args>(tail)...))
     {}
 
     List(std::shared_ptr<const Node> node) noexcept : node_(std::move(node))
