@@ -30,6 +30,13 @@ namespace gungnir {
 
 using namespace detail;
 
+/**
+ * An immutable linked list.
+ *
+ * @author Zizheng Tai
+ * @since 1.0
+ * @tparam A type of elements
+ */
 template<typename A>
 class List final {
 private:
@@ -39,21 +46,42 @@ private:
     using Ptr = std::shared_ptr<const T>;
 
 public:
+    /**
+     * Constructs an empty list.
+     */
     List() noexcept : node_(Node::create())
     {}
 
+    /**
+     * Constructs a list with the given element.
+     *
+     * @param x the only element in this list
+     */
     List(A x) noexcept
         : node_(Node::create(
                     std::make_shared<const A>(std::move(x)),
                     Node::create()))
     {}
 
+    /**
+     * Constructs a list with the given head and tail.
+     *
+     * @param head the first element in this list
+     * @param tail all except the first elements in this list
+     */
     List(A head, List tail) noexcept
         : node_(Node::create(
                     std::make_shared<const A>(std::move(head)),
                     std::move(tail.node_)))
     {}
 
+    /**
+     * Constructs a list with the given elements.
+     *
+     * @tparam Args types of the given elements
+     * @param head the first element in this list
+     * @param tail all except the first elements in this list
+     */
     template<
         typename... Args,
         typename = typename std::enable_if<
@@ -64,19 +92,44 @@ public:
         : List(std::move(head), List(std::forward<Args>(tail)...))
     {}
 
-    List(Ptr< Node> node) noexcept : node_(std::move(node))
-    {}
+    /** Default copy constructor. */
+    List(const List &) = default;
 
+    /** Default move constructor. */
+    List(List &&) = default;
+
+    /** Default copy assignment operator. */
+    List & operator=(const List &) = default;
+
+    /** Default move assignment operator. */
+    List & operator=(List &&) = default;
+
+    /**
+     * Returns `true` if this list contains no elements, `false` otherwise.
+     *
+     * @return `true` if this list contains no elements, `false` otherwise
+     */
     bool isEmpty() const
     {
         return node_->size == 0;
     }
 
+    /**
+     * Returns the number of elements in this list.
+     *
+     * @return the number of elements in this list
+     */
     std::size_t size() const
     {
         return node_->size;
     }
 
+    /**
+     * Returns the first element in this list.
+     *
+     * @return the first element in this list
+     * @throws std::out_of_range if this list is empty
+     */
     const A & head() const
     {
         if (isEmpty()) {
@@ -85,6 +138,12 @@ public:
         return *(node_->head);
     }
 
+    /**
+     * Returns all except the first elements in this list.
+
+     * @return all except the first elements in this list
+     * @throws std::out_of_range if this list is empty
+     */
     List tail() const
     {
         if (isEmpty()) {
@@ -93,6 +152,11 @@ public:
         return node_->tail;
     }
 
+    /**
+     * Applies a function to every element in this list.
+     *
+     * @param f the function to apply to every element for its side-effect
+     */
     template<typename Fn>
     void foreach(Fn f) const
     {
@@ -101,6 +165,15 @@ public:
         }
     }
 
+    /**
+     * Builds a new list by applying a function to every element in this list.
+     *
+     * @tparam Fn type of the function to apply to every element
+     * @tparam B element type of the resulting list
+     * @param f the function to apply to every element
+     * @return a new list resulting from applying the given function `f` to
+     *         every element in this list.
+     */
     template<typename Fn, typename B = Decay<Ret<Fn, A>>>
     List<B> map(Fn f) const
     {
@@ -122,6 +195,14 @@ public:
         return hd;
     }
 
+    /**
+     * Selects all elements in this list which satisfy a predicate.
+     *
+     * @tparam Fn type of the predicate
+     * @param p the predicate used to test elements
+     * @return a new list consisting of all elements of this list that satisfy
+     *         the given predicate `p`. The order of the elements is preserved.
+     */
     template<typename Fn>
     List filter(Fn p) const
     {
@@ -141,6 +222,11 @@ public:
         return hd;
     }
 
+    /**
+     * Returns a new list with elements in this list in reversed order.
+     *
+     * @return a new list with elements in this list in reversed order
+     */
     List reverse() const
     {
         auto hd = Node::create();
@@ -150,6 +236,13 @@ public:
         return hd;
     }
 
+    /**
+     * Returns the element at the specified position in this list.
+     *
+     * @param index index of the element to return
+     * @return the element at the specified position in this list
+     * @throws std::out_of_range if `index` is out of range (`index >= size()`)
+     */
     const A & operator[](std::size_t index) const
     {
         if (index >= size()) {
@@ -160,15 +253,22 @@ public:
         return *(n->head);
     }
 
-    bool operator==(const List<A> &rhs) const
+    /**
+     * Compares this list with the given list for equality.
+     *
+     * @param that the list to be compared for equality with this list
+     * @return `true` if `that` contains the same elements as this list
+     *         in the same order, `false` otherwise.
+     */
+    bool operator==(const List<A> &that) const
     {
-        if (this == &rhs) {
+        if (this == &that) {
             return true;
         }
-        if (size() != rhs.size()) {
+        if (size() != that.size()) {
             return false;
         }
-        for (auto n1 = node_.get(), n2 = rhs.node_.get();
+        for (auto n1 = node_.get(), n2 = that.node_.get();
                 n1->size != 0;
                 n1 = n1->tail.get(), n2 = n2->tail.get()) {
             if (*(n1->head) != *(n2->head)) {
@@ -178,9 +278,16 @@ public:
         return true;
     }
 
-    bool operator!=(const List<A> &rhs) const
+    /**
+     * Compares this list with the given list for inequality.
+     *
+     * @param that the list to be compared for inequality with this list
+     * @return `true` if `that` does not contains the same elements as this list
+     *         in the same order, `false` otherwise.
+     */
+    bool operator!=(const List<A> &that) const
     {
-        return !(*this == rhs);
+        return !(*this == that);
     }
 
 private:
@@ -216,6 +323,9 @@ private:
         const Ptr<A> head;
         const Ptr<Node> tail;
     };
+
+    List(Ptr< Node> node) noexcept : node_(std::move(node))
+    {}
 
     Ptr<Node> node_;
 };
