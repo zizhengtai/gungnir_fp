@@ -14,7 +14,10 @@ Gungnir provides a collection of data structures to facilitate functional progra
 
 Some of the more frequently used data structures include:
 
-* `List`
+* [`List`](./include/gungnir/List.hpp)
+* `Vector`
+* `Stream`
+* `Iterator`
 
 ## License
 
