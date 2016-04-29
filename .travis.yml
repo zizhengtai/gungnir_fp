@@ -32,11 +32,7 @@ matrix:
           packages:
             - g++-5
             - valgrind
-      env:
-        - COMPILER="g++-5"
-        - CXXFLAGS="--coverage"
-        - CODECOV_TOKEN="6d3c36d4-6032-4f64-8248-7605aaa95098"
-        - GCOVEXE="gcov-5"
+      env: COMPILER="g++-5"
 
     - os: linux
       compiler: clang
@@ -91,16 +87,12 @@ matrix:
       compiler: clang
       env: COMPILER="clang++"
 
-before_script:
-  - export CXX="$COMPILER"
+before_script: export CXX="$COMPILER"
 
 script:
   - cd test && cmake . && make
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then valgrind --tool=memcheck --leak-check=full --error-exitcode=1 ./test_all; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./test_all; fi
-
-after_success:
-  - if [ -n "${GCOVEXE+x}" ]; then bash <(curl -s https://codecov.io/bash) -s CMakeFiles/test_all.dir -x "$GCOVEXE"; fi
 
 branches:
   only:
