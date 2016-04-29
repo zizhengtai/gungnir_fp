@@ -157,6 +157,11 @@ public:
         return true;
     }
 
+    bool operator!=(const List<A> &rhs) const
+    {
+        return !(*this == rhs);
+    }
+
 private:
     template<typename>
     friend class List;

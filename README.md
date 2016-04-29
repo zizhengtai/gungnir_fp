@@ -12,6 +12,8 @@ Gungnir is a library that provides abstractions for functional programming in C+
 
 Gungnir provides a collection of data structures to facilitate functional programming in C++, most of which are immutable functional data structures. Their implementations are highly optimized with techniques such as data sharing and non-strictness, so you should not hold back from using them for performance considerations.
 
+Some of the more frequently used data structures include:
+
 * `List`
 
 ## License
