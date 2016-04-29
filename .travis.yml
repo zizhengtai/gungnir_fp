@@ -9,6 +9,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.8
+            - cmake
             - valgrind
       env: COMPILER="g++-4.8"
 
@@ -20,6 +21,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.9
+            - cmake
             - valgrind
       env: COMPILER="g++-4.9"
 
@@ -31,6 +33,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
+            - cmake
             - valgrind
       env: COMPILER="g++-5"
 
@@ -43,6 +46,7 @@ matrix:
             - llvm-toolchain-precise-3.5
           packages:
             - clang-3.5
+            - cmake
             - valgrind
       env: COMPILER="clang++-3.5"
 
@@ -55,6 +59,7 @@ matrix:
             - llvm-toolchain-precise-3.6
           packages:
             - clang-3.6
+            - cmake
             - valgrind
       env: COMPILER="clang++-3.6"
 
@@ -67,6 +72,7 @@ matrix:
             - llvm-toolchain-precise-3.7
           packages:
             - clang-3.7
+            - cmake
             - valgrind
       env: COMPILER="clang++-3.7"
 
@@ -79,6 +85,7 @@ matrix:
             - llvm-toolchain-precise-3.8
           packages:
             - clang-3.8
+            - cmake
             - valgrind
       env: COMPILER="clang++-3.8"
 
