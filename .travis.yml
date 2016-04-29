@@ -99,7 +99,7 @@ script:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./test_all; fi
 
 after_success:
-  - if [ -z "${CODECOV_TOKEN+x}" ]; then cd CMakeFiles/test_all.dir && bash <(curl -s https://codecov.io/bash) -x gcov-5; fi
+  - if [ -n "${CODECOV_TOKEN+x}" ]; then cd CMakeFiles/test_all.dir && bash <(curl -s https://codecov.io/bash) -x gcov-5; fi
 
 branches:
   only:
