@@ -9,7 +9,7 @@ Gungnir is a library that provides abstractions for functional programming in C+
 ([Gungnir](https://en.wikipedia.org/wiki/Gungnir) is Odin's magic spear that always hits its mark. This library is named after the spear, in the hope of having the same power and reliability.)
 
 ## Functional Data Structures
-* List
+* `List`
 
 ## License
 
