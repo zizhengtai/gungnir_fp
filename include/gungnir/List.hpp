@@ -96,7 +96,9 @@ public:
     template<typename Fn>
     void foreach(Fn f) const
     {
-        foreachImpl(std::move(f));
+        for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
+            f(*(n->head));
+        }
     }
 
     template<typename Fn, typename B = Decay<Ret<Fn, A>>>
@@ -107,12 +109,12 @@ public:
         std::vector<Ptr<B>> buf;
         buf.reserve(size());
 
-        foreachImpl([&buf, &ff](const A &x) {
+        foreach([&buf, &ff](const A &x) {
             buf.emplace_back(std::make_shared<const B>(ff(x)));
         });
 
         using BN = typename List<B>::Node;
-        Ptr<BN> hd = BN::create();
+        auto hd = BN::create();
         for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
             hd = BN::create(std::move(*it), std::move(hd));
         }
@@ -120,9 +122,28 @@ public:
         return hd;
     }
 
+    template<typename Fn>
+    List filter(Fn p) const
+    {
+        std::vector<Ptr<A>> buf;
+
+        for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
+            if (p(*(n->head))) {
+                buf.emplace_back(n->head);
+            }
+        }
+
+        auto hd = Node::create();
+        for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
+            hd = Node::create(std::move(*it), std::move(hd));
+        }
+
+        return hd;
+    }
+
     List reverse() const
     {
-        Ptr<Node> hd = Node::create();
+        auto hd = Node::create();
         for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
             hd = Node::create(n->head, std::move(hd));
         }
@@ -195,14 +216,6 @@ private:
         const Ptr<A> head;
         const Ptr<Node> tail;
     };
-
-    template<typename Fn>
-    void foreachImpl(Fn f) const
-    {
-        for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
-            f(*(n->head));
-        }
-    }
 
     Ptr<Node> node_;
 };

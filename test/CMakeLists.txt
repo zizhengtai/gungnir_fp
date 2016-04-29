@@ -8,5 +8,6 @@ add_executable(test_all
   test_list_equal.cpp
   test_list_foreach.cpp
   test_list_map.cpp
+  test_list_filter.cpp
   test_list_reverse.cpp
 )
