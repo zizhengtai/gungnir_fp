@@ -16,6 +16,7 @@
 #ifndef GUNGNIR_LIST_HPP
 #define GUNGNIR_LIST_HPP
 
+#include <algorithm>
 #include <cstddef>
 #include <functional>
 #include <iterator>
@@ -55,7 +56,7 @@ public:
     /**
      * Constructs a list with the given element.
      *
-     * @param x the only element in this list
+     * @param x the only element of this list
      */
     List(A x) noexcept
         : node_(Node::create(
@@ -66,8 +67,8 @@ public:
     /**
      * Constructs a list with the given head and tail.
      *
-     * @param head the first element in this list
-     * @param tail all except the first elements in this list
+     * @param head the first element of this list
+     * @param tail all except the first elements of this list
      */
     List(A head, List tail) noexcept
         : node_(Node::create(
@@ -79,8 +80,8 @@ public:
      * Constructs a list with the given elements.
      *
      * @tparam Args types of the given elements
-     * @param head the first element in this list
-     * @param tail all except the first elements in this list
+     * @param head the first element of this list
+     * @param tail all except the first elements of this list
      */
     template<
         typename... Args,
@@ -115,9 +116,9 @@ public:
     }
 
     /**
-     * Returns the number of elements in this list.
+     * Returns the number of elements of this list.
      *
-     * @return the number of elements in this list
+     * @return the number of elements of this list
      */
     std::size_t size() const
     {
@@ -125,9 +126,9 @@ public:
     }
 
     /**
-     * Returns the first element in this list.
+     * Returns the first element of this list.
      *
-     * @return the first element in this list
+     * @return the first element of this list
      * @throws std::out_of_range if this list is empty
      */
     const A & head() const
@@ -139,9 +140,9 @@ public:
     }
 
     /**
-     * Returns all except the first elements in this list.
+     * Returns all except the first elements of this list.
 
-     * @return all except the first elements in this list
+     * @return all except the first elements of this list
      * @throws std::out_of_range if this list is empty
      */
     List tail() const
@@ -153,7 +154,7 @@ public:
     }
 
     /**
-     * Applies a function to every element in this list.
+     * Applies a function to every element of this list.
      *
      * @param f the function to apply to every element for its side-effect
      */
@@ -164,13 +165,14 @@ public:
     }
 
     /**
-     * Builds a new list by applying a function to every element in this list.
+     * Returns a new list resulting from applying a function to
+     * every element of this list.
      *
      * @tparam Fn type of the function to apply to every element
-     * @tparam B element type of the resulting list
+     * @tparam B type of elements of the resulting list
      * @param f the function to apply to every element
      * @return a new list resulting from applying the given function `f` to
-     *         every element in this list.
+     *         every element of this list
      */
     template<typename Fn, typename B = Decay<Ret<Fn, A>>>
     List<B> map(Fn f) const
@@ -194,7 +196,7 @@ public:
     }
 
     /**
-     * Selects all elements in this list which satisfy a predicate.
+     * Returns all elements of this list that satisfy a predicate.
      *
      * @tparam Fn type of the predicate
      * @param p the predicate used to test elements
@@ -221,9 +223,9 @@ public:
     }
 
     /**
-     * Returns a new list with elements in this list in reversed order.
+     * Returns a new list with elements of this list in reversed order.
      *
-     * @return a new list with elements in this list in reversed order
+     * @return a new list with elements of this list in reversed order
      */
     List reverse() const
     {
@@ -235,10 +237,34 @@ public:
     }
 
     /**
-     * Returns the element at the specified position in this list.
+     * Returns the first `n` elements of this list.
+     *
+     * @param n the number of elements to take from this list
+     * @return a list consisting of the first `n` elements of this list,
+     *         or the whole list if `n > size()`
+     */
+    List take(std::size_t n) const
+    {
+        n = std::min(n, size());
+        
+        std::vector<Ptr<A>> buf;
+        for (auto nd = node_.get(); n > 0; nd = nd->tail.get(), --n) {
+            buf.emplace_back(nd->head);
+        }
+
+        auto hd = Node::create();
+        for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
+            hd = Node::create(std::move(*it), std::move(hd));
+        }
+
+        return hd;
+    }
+
+    /**
+     * Returns the element at the specified position of this list.
      *
      * @param index index of the element to return
-     * @return the element at the specified position in this list
+     * @return the element at the specified position of this list
      * @throws std::out_of_range if `index` is out of range (`index >= size()`)
      */
     const A & operator[](std::size_t index) const
