@@ -139,6 +139,24 @@ public:
         return *(n->head);
     }
 
+    bool operator==(const List<A> &rhs) const
+    {
+        if (this == &rhs) {
+            return true;
+        }
+        if (size() != rhs.size()) {
+            return false;
+        }
+        for (auto n1 = node_.get(), n2 = rhs.node_.get();
+                n1->size != 0;
+                n1 = n1->tail.get(), n2 = n2->tail.get()) {
+            if (*(n1->head) != *(n2->head)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 private:
     template<typename>
     friend class List;
