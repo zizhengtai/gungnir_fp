@@ -160,7 +160,7 @@ public:
     template<typename Fn>
     void foreach(Fn f) const
     {
-        foreachImpl([&f](const Ptr<Node> &n) { f(*(n->head)); });
+        foreachImpl([&f](const Ptr<A> &x) { f(*x); });
     }
 
     /**
@@ -180,8 +180,8 @@ public:
         std::vector<Ptr<B>> buf;
         buf.reserve(size());
 
-        foreachImpl([&buf, &ff](const Ptr<Node> &n) {
-            buf.emplace_back(std::make_shared<const B>(ff(*(n->head))));
+        foreachImpl([&buf, &ff](const Ptr<A> &x) {
+            buf.emplace_back(std::make_shared<const B>(ff(*x)));
         });
 
         using BN = typename List<B>::Node;
@@ -206,9 +206,9 @@ public:
     {
         std::vector<Ptr<A>> buf;
 
-        foreachImpl([&p, &buf](const Ptr<Node> &n) {
-            if (p(*(n->head))) {
-                buf.emplace_back(n->head);
+        foreachImpl([&p, &buf](const Ptr<A> &x) {
+            if (p(*x)) {
+                buf.emplace_back(x);
             }
         });
 
@@ -228,8 +228,8 @@ public:
     List reverse() const
     {
         auto hd = Node::create();
-        foreachImpl([&hd](const Ptr<Node> &n) {
-            hd = Node::create(n->head, std::move(hd));
+        foreachImpl([&hd](const Ptr<A> &x) {
+            hd = Node::create(x, std::move(hd));
         });
         return hd;
     }
@@ -328,8 +328,8 @@ private:
     template<typename Fn>
     void foreachImpl(Fn f) const
     {
-        for (auto n = &node_; (*n)->size > 0; n = &((*n)->tail)) {
-            f(*n);
+        for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
+            f(n->head);
         }
     }
 
