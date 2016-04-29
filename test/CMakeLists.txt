@@ -1,5 +1,7 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 2.6)
 
+include_directories(../include)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror -pedantic-errors -O0 -g")
 add_executable(test_all
   test_all.cpp
   test_list_constructors.cpp
@@ -8,5 +10,3 @@ add_executable(test_all
   test_list_map.cpp
   test_list_reverse.cpp
 )
-target_compile_options(test_all PUBLIC -std=c++11 -Wall -Wextra -Werror -pedantic-errors -O3)
-target_include_directories(test_all PUBLIC ../include)
