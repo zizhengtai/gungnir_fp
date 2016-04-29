@@ -5,7 +5,7 @@
 #include "gungnir/List.hpp"
 using gungnir::List;
 
-TEST_CASE("test List reverse", "[reverse]") {
+TEST_CASE("test List reverse", "[List][reverse]") {
     SECTION("empty List") {
         List<int> xs;
         REQUIRE(xs.reverse() == xs);

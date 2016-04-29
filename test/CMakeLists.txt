@@ -1,14 +1,15 @@
 cmake_minimum_required(VERSION 2.6)
 
-include_directories(../include)
+include_directories(. ../include)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror -pedantic-errors -O0 -g")
 add_executable(test_all
   test_all.cpp
-  test_list_constructors.cpp
-  test_list_equal.cpp
-  test_list_foreach.cpp
-  test_list_map.cpp
-  test_list_filter.cpp
-  test_list_reverse.cpp
-  test_list_take.cpp
+  List/test_constructors.cpp
+  List/test_equal.cpp
+  List/test_foreach.cpp
+  List/test_map.cpp
+  List/test_filter.cpp
+  List/test_reverse.cpp
+  List/test_take.cpp
+  List/test_drop.cpp
 )

@@ -3,7 +3,7 @@
 #include "gungnir/List.hpp"
 using gungnir::List;
 
-TEST_CASE("test List equal", "[equal]") {
+TEST_CASE("test List equal", "[List][equal]") {
     SECTION("Lists with same size") {
         List<int> xs1;
         REQUIRE(xs1 == xs1);

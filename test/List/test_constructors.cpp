@@ -6,7 +6,7 @@
 #include "gungnir/List.hpp"
 using gungnir::List;
 
-TEST_CASE("test List constructors", "[constructor]") {
+TEST_CASE("test List constructors", "[List][constructor]") {
     SECTION("empty List") {
         List<int> xs;
         REQUIRE(xs.isEmpty());

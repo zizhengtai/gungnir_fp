@@ -8,7 +8,7 @@
 #include "gungnir/List.hpp"
 using gungnir::List;
 
-TEST_CASE("test List map", "[map]") {
+TEST_CASE("test List map", "[List][map]") {
     class Person {
     public:
         Person(std::string name, std::uint8_t age) noexcept

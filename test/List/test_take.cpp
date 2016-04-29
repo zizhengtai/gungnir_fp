@@ -6,7 +6,7 @@
 #include "gungnir/List.hpp"
 using gungnir::List;
 
-TEST_CASE("test List take", "[take]") {
+TEST_CASE("test List take", "[List][take]") {
     SECTION("empty List") {
         List<int> xs;
         REQUIRE(xs.take(0).isEmpty());

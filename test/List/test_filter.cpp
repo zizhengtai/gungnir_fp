@@ -5,7 +5,7 @@
 #include "gungnir/List.hpp"
 using gungnir::List;
 
-TEST_CASE("test List filter", "[filter]") {
+TEST_CASE("test List filter", "[List][filter]") {
     SECTION("empty List") {
         List<int> xs;
         REQUIRE(xs.filter([](int x) { return x % 2 == 0; }).isEmpty());

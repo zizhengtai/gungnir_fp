@@ -261,6 +261,23 @@ public:
     }
 
     /**
+     * Returns all except the first `n` elements of this list.
+     *
+     * @param n the number of elements to drop from this list
+     * @return a list consisting of all except the first `n` elements of
+     *         this list, or an empty list if `n > size()`.
+     */
+    List drop(std::size_t n) const
+    {
+        if (n >= size()) {
+            return List();
+        }
+        auto pn = &node_;
+        for (; n > 0; pn = &((*pn)->tail), --n) {}
+        return *pn;
+    }
+
+    /**
      * Returns the element at the specified position of this list.
      *
      * @param index index of the element to return

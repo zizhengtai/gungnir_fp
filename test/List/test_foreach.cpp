@@ -6,7 +6,7 @@
 #include "gungnir/List.hpp"
 using gungnir::List;
 
-TEST_CASE("test List foreach", "[foreach]") {
+TEST_CASE("test List foreach", "[List][foreach]") {
     SECTION("empty List") {
         std::vector<int> v;
 
