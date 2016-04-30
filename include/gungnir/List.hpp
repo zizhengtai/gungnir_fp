@@ -157,7 +157,7 @@ public:
     /**
      * Applies a function to every element of this list.
      *
-     * @param f the function to apply for its side-effect to every element
+     * @param f the function to apply, for its side-effect,
      *          to every element of this list
      */
     template<typename Fn>
