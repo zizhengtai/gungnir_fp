@@ -13,4 +13,5 @@ add_executable(test_all
   List/test_take.cpp
   List/test_take_right.cpp
   List/test_drop.cpp
+  List/test_drop_right.cpp
 )

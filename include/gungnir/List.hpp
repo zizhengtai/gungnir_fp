@@ -290,6 +290,18 @@ public:
     }
 
     /**
+     * Returns all except the last `n` elements of this list.
+     *
+     * @param n the number of elements to drop
+     * @return a list consisting of all except the last `n` elements of
+     *         this list, or an empty list if `n > size()`
+     */
+    List dropRight(std::size_t n) const
+    {
+        return take(size() - std::min(n, size()));
+    }
+
+    /**
      * Returns the element at the specified position of this list.
      *
      * @param index index of the element to return
