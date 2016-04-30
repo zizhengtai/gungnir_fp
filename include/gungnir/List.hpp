@@ -157,7 +157,8 @@ public:
     /**
      * Applies a function to every element of this list.
      *
-     * @param f the function to apply to every element for its side-effect
+     * @param f the function to apply for its side-effect to every element
+     *          to every element of this list
      */
     template<typename Fn>
     void foreach(Fn f) const
