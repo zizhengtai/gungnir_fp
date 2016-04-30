@@ -70,4 +70,3 @@ TEST_CASE("test List drop", "[List][drop]") {
         REQUIRE(xs.drop(0).drop(1).drop(0) == List<int>(2, 3, 4, 5));
     }
 }
-

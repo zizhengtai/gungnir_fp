@@ -11,5 +11,6 @@ add_executable(test_all
   List/test_filter.cpp
   List/test_reverse.cpp
   List/test_take.cpp
+  List/test_take_right.cpp
   List/test_drop.cpp
 )

@@ -239,7 +239,7 @@ public:
     /**
      * Returns the first `n` elements of this list.
      *
-     * @param n the number of elements to take from this list
+     * @param n the number of elements to take
      * @return a list consisting of the first `n` elements of this list,
      *         or the whole list if `n > size()`
      */
@@ -261,11 +261,23 @@ public:
     }
 
     /**
+     * Returns the last `n` elements of this list.
+     *
+     * @param n the number of elements to take
+     * @return a list consisting of the last `n` elements of this list,
+     *         or the whole list if `n > size()`
+     */
+    List takeRight(std::size_t n) const
+    {
+        return drop(size() - std::min(n, size()));
+    }
+
+    /**
      * Returns all except the first `n` elements of this list.
      *
-     * @param n the number of elements to drop from this list
+     * @param n the number of elements to drop
      * @return a list consisting of all except the first `n` elements of
-     *         this list, or an empty list if `n > size()`.
+     *         this list, or an empty list if `n > size()`
      */
     List drop(std::size_t n) const
     {
@@ -299,7 +311,7 @@ public:
      *
      * @param that the list to be compared for equality with this list
      * @return `true` if `that` contains the same elements as this list
-     *         in the same order, `false` otherwise.
+     *         in the same order, `false` otherwise
      */
     bool operator==(const List<A> &that) const
     {
@@ -324,7 +336,7 @@ public:
      *
      * @param that the list to be compared for inequality with this list
      * @return `true` if `that` does not contains the same elements as this list
-     *         in the same order, `false` otherwise.
+     *         in the same order, `false` otherwise
      */
     bool operator!=(const List<A> &that) const
     {
