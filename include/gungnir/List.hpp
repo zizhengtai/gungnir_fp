@@ -37,7 +37,7 @@ using namespace detail;
  *
  * @author Zizheng Tai
  * @since 1.0
- * @tparam A type of elements
+ * @tparam A the type of the elements
  */
 template<typename A>
 class List final {
@@ -80,7 +80,7 @@ public:
     /**
      * Constructs a list with the given elements.
      *
-     * @tparam Args types of the given elements
+     * @tparam Args the types of the given elements
      * @param head the first element of this list
      * @param tail all except the first elements of this list
      */
@@ -169,8 +169,8 @@ public:
      * Returns a new list resulting from applying a function to
      * every element of this list.
      *
-     * @tparam Fn type of the function to apply to every element
-     * @tparam B type of elements of the resulting list
+     * @tparam Fn the type of the function to apply to every element
+     * @tparam B the element type of returned list
      * @param f the function to apply to every element
      * @return a new list resulting from applying the given function `f` to
      *         every element of this list
