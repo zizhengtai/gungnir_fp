@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef GUNGNIR_UTIL_HPP
 #define GUNGNIR_UTIL_HPP
 
