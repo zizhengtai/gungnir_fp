@@ -1,0 +1,64 @@
+#include <memory>
+
+#include "catch.hpp"
+
+#include "gungnir/List.hpp"
+using gungnir::List;
+
+template<typename T> static bool alwaysTrue(T) { return true; }
+template<typename T> static bool alwaysFalse(T) { return false; }
+static bool isEven(int x) { return x % 2 == 0; }
+static bool isOdd(int x) { return x % 2 != 0; }
+template<int n> static bool gt(int x) { return x > n; }
+template<int n> static bool lt(int x) { return x < n; }
+
+TEST_CASE("test List dropWhile", "[List][dropWhile]") {
+
+    using PI = std::unique_ptr<int>;
+
+    SECTION("empty List") {
+        List<int> xs;
+        REQUIRE(xs.dropWhile(alwaysTrue<int>).isEmpty());
+        REQUIRE(xs.dropWhile(alwaysFalse<int>).isEmpty());
+
+        List<PI> ys;
+        REQUIRE(ys.dropWhile(alwaysTrue<const PI &>).isEmpty());
+        REQUIRE(ys.dropWhile(alwaysFalse<const PI &>).isEmpty());
+    }
+    SECTION("List with one element") {
+        List<int> xs(123);
+        REQUIRE(xs.dropWhile(alwaysTrue<int>).isEmpty());
+        REQUIRE(xs.dropWhile(alwaysFalse<int>) == List<int>(123));
+        REQUIRE(xs.dropWhile(isEven) == List<int>(123));
+        REQUIRE(xs.dropWhile(isOdd).isEmpty());
+
+        List<PI> ys(PI(new int(456)));
+        REQUIRE(ys.dropWhile(alwaysTrue<const PI &>).isEmpty());
+        REQUIRE(ys.dropWhile(alwaysFalse<const PI &>) == ys);
+        REQUIRE(ys.dropWhile([](const PI &p) { return isEven(*p); }).isEmpty());
+        REQUIRE(ys.dropWhile([](const PI &p) { return isOdd(*p); }) == ys);
+    }
+    SECTION("List with multiple element") {
+        List<int> xs(2, 4, 1, 5, 3);
+        REQUIRE(xs.dropWhile(alwaysTrue<int>).isEmpty());
+        REQUIRE(xs.dropWhile(alwaysFalse<int>) == List<int>(2, 4, 1, 5, 3));
+        REQUIRE(xs.dropWhile(gt<1>) == List<int>(1, 5, 3));
+        REQUIRE(xs.dropWhile(gt<0>) == List<int>());
+        REQUIRE(xs.dropWhile(lt<5>) == List<int>(5, 3));
+        REQUIRE(xs.dropWhile(lt<1>) == List<int>(2, 4, 1, 5, 3));
+
+        List<PI> ys(
+            PI(new int(2)),
+            PI(new int(4)),
+            PI(new int(1)),
+            PI(new int(5)),
+            PI(new int(3))
+        );
+        REQUIRE(ys.dropWhile(alwaysTrue<const PI &>).isEmpty());
+        REQUIRE(ys.dropWhile(alwaysFalse<const PI &>) == ys);
+        REQUIRE(ys.dropWhile([](const PI &p) { return *p > 1; }) == ys.drop(2));
+        REQUIRE(ys.dropWhile([](const PI &p) { return *p > 0; }) == List<PI>());
+        REQUIRE(ys.dropWhile([](const PI &p) { return *p < 5; }) == ys.drop(3));
+        REQUIRE(ys.dropWhile([](const PI &p) { return *p < 1; }) == ys);
+    }
+}

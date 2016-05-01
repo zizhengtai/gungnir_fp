@@ -325,6 +325,27 @@ public:
     }
 
     /**
+     * Returns the longest suffix of this list whose first element does not
+     * satisfy the given predicate.
+     *
+     * @tparam Fn the type of the predicate
+     * @param p the predicate
+     * @return the longest suffix of this list whose first element does not
+     *         satisfy the given predicate
+     */
+    template<typename Fn>
+    List dropWhile(Fn p) const
+    {
+        std::size_t num = 0;
+        for (auto n = node_.get();
+                n->size > 0 && p(*(n->head));
+                n = n->tail.get(), ++num) {
+        }
+
+        return drop(num);
+    }
+
+    /**
      * Returns the element at the specified position of this list.
      *
      * @param index index of the element to return

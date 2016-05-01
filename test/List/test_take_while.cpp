@@ -5,12 +5,12 @@
 #include "gungnir/List.hpp"
 using gungnir::List;
 
-template<typename T> bool alwaysTrue(T) { return true; }
-template<typename T> bool alwaysFalse(T) { return false; }
-bool isEven(int x) { return x % 2 == 0; }
-bool isOdd(int x) { return x % 2 != 0; }
-template<int n> bool gt(int x) { return x > n; }
-template<int n> bool lt(int x) { return x < n; }
+template<typename T> static bool alwaysTrue(T) { return true; }
+template<typename T> static bool alwaysFalse(T) { return false; }
+static bool isEven(int x) { return x % 2 == 0; }
+static bool isOdd(int x) { return x % 2 != 0; }
+template<int n> static bool gt(int x) { return x > n; }
+template<int n> static bool lt(int x) { return x < n; }
 
 TEST_CASE("test List takeWhile", "[List][takeWhile]") {
 
