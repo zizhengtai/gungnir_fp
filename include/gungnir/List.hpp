@@ -422,6 +422,26 @@ public:
     }
 
     /**
+     * Returns `true` if this list is empty or the given predicate holds for
+     * all elements of this list, `false` otherwise.
+     *
+     * @tparam Fn the type of the predicate
+     * @param p the predicate
+     * @return `true` if this list is empty or the given predicate holds for
+     *         all elements of this list, `false` otherwise
+     */
+    template<typename Fn>
+    bool forall(Fn p) const
+    {
+        for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
+            if (!p(*(n->head))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Returns the element at the specified position of this list.
      *
      * @param index index of the element to return
