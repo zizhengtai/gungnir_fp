@@ -275,6 +275,27 @@ public:
     }
 
     /**
+     * Returns the longest prefix of this list whose elements satisfy
+     * the given predicate.
+     *
+     * @tparam Fn the type of the predicate
+     * @param p the predicate
+     * @return the longest prefix of this list whose elements satisfy
+     *         the given predicate
+     */
+    template<typename Fn>
+    List takeWhile(Fn p) const
+    {
+        std::size_t num = 0;
+        for (auto n = node_.get();
+                n->size > 0 && p(*(n->head));
+                n = n->tail.get(), ++num) {
+        }
+
+        return take(num);
+    }
+
+    /**
      * Returns all except the first `n` elements of this list.
      *
      * @param n the number of elements to drop
