@@ -402,6 +402,26 @@ public:
     }
 
     /**
+     * Returns `true` if at least one element of this list satisfy the given
+     * predicate, `false` otherwise.
+     *
+     * @tparam Fn the type of the predicate
+     * @param p the predicate
+     * @return `true` if at least one element of this list satisfy the given
+     *         predicate, `false` otherwise
+     */
+    template<typename Fn>
+    bool exists(Fn p) const
+    {
+        for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
+            if (p(*(n->head))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns the element at the specified position of this list.
      *
      * @param index index of the element to return

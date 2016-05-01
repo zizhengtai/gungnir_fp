@@ -23,4 +23,6 @@ add_executable(test_all
   List/test_drop_while.cpp
   List/test_flat_map.cpp
   List/test_flatten.cpp
+  List/test_exists.cpp
+  List/test_forall.cpp
 )
