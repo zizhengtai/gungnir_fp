@@ -26,7 +26,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "gungnir/util.hpp"
+#include "gungnir/detail/util.hpp"
 
 namespace gungnir {
 
