@@ -6,8 +6,6 @@
 
 Gungnir is a library that provides abstractions for functional programming in C++. It is made with ease of use, efficiency, and full compatibility with the C++11 standard in mind.
 
-([Gungnir](https://en.wikipedia.org/wiki/Gungnir) is Odin's magic spear that always hits its mark. This library is named after the spear, in the hope of having the same power and reliability.)
-
 ## Data Structures
 
 Gungnir provides a collection of data structures to facilitate functional programming in C++, most of which are immutable functional data structures. Their implementations are highly optimized, utilizing techniques including [structural sharing](https://en.wikipedia.org/wiki/Persistent_data_structure) and [lazy evaluation](https://en.wikipedia.org/wiki/Lazy_evaluation), so you should not hold back from using them for performance considerations.
