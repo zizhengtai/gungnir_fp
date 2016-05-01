@@ -6,6 +6,9 @@ add_executable(test_all
   test_all.cpp
   List/test_constructors.cpp
   List/test_equal.cpp
+  List/test_head.cpp
+  List/test_tail.cpp
+  List/test_init.cpp
   List/test_foreach.cpp
   List/test_map.cpp
   List/test_filter.cpp

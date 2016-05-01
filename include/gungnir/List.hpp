@@ -69,7 +69,7 @@ public:
      * Constructs a list with the given head and tail.
      *
      * @param head the first element of this list
-     * @param tail all except the first elements of this list
+     * @param tail all elements of this list except the first one
      */
     List(A head, List tail) noexcept
         : node_(Node::create(
@@ -82,7 +82,7 @@ public:
      *
      * @tparam Args the types of the given elements
      * @param head the first element of this list
-     * @param tail all except the first elements of this list
+     * @param tail all elements of this list except the first one
      */
     template<
         typename... Args,
@@ -141,9 +141,9 @@ public:
     }
 
     /**
-     * Returns all except the first elements of this list.
+     * Returns all elements of this list except the first one.
 
-     * @return all except the first elements of this list
+     * @return all elements of this list except the first one
      * @throws std::out_of_range if this list is empty
      */
     List tail() const
@@ -152,6 +152,20 @@ public:
             throw std::out_of_range("tail of empty list");
         }
         return node_->tail;
+    }
+
+    /**
+     * Returns all elements of this list except the last one.
+     *
+     * @return all elements of this list except the last one
+     * @throws std::out_of_range if this list is empty
+     */
+    List init() const
+    {
+        if (isEmpty()) {
+            throw std::out_of_range("init of empty list");
+        }
+        return take(size() - 1);
     }
 
     /**
@@ -296,11 +310,11 @@ public:
     }
 
     /**
-     * Returns all except the first `n` elements of this list.
+     * Returns all elements of this list except the first `n` ones.
      *
      * @param n the number of elements to drop
-     * @return a list consisting of all except the first `n` elements of
-     *         this list, or an empty list if `n > size()`
+     * @return a list consisting of all elements of this list except
+     *         the first `n` ones, or an empty list if `n > size()`
      */
     List drop(std::size_t n) const
     {
@@ -313,11 +327,11 @@ public:
     }
 
     /**
-     * Returns all except the last `n` elements of this list.
+     * Returns all elements of this list except the last `n` ones.
      *
      * @param n the number of elements to drop
-     * @return a list consisting of all except the last `n` elements of
-     *         this list, or an empty list if `n > size()`
+     * @return a list consisting of all elements of this list except
+     *         the last `n` ones, or an empty list if `n > size()`
      */
     List dropRight(std::size_t n) const
     {
