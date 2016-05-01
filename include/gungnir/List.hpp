@@ -41,7 +41,7 @@ using namespace detail;
  */
 template<typename A>
 class List final {
-private:
+
     class Node;
 
     template<typename T>
@@ -169,10 +169,10 @@ public:
     }
 
     /**
-     * Applies a function to every element of this list.
+     * Applies a function to each element of this list.
      *
      * @param f the function to apply, for its side-effect,
-     *          to every element of this list
+     *          to each element of this list
      */
     template<typename Fn>
     void foreach(Fn f) const
@@ -182,13 +182,13 @@ public:
 
     /**
      * Returns a new list resulting from applying a function to
-     * every element of this list.
+     * each element of this list.
      *
-     * @tparam Fn the type of the function to apply to every element
+     * @tparam Fn the type of the function to apply to each element of this list
      * @tparam B the element type of returned list
-     * @param f the function to apply to every element
+     * @param f the function to apply to each element of this list
      * @return a new list resulting from applying the given function `f` to
-     *         every element of this list
+     *         each element of this list
      */
     template<typename Fn, typename B = Decay<Ret<Fn, A>>>
     List<B> map(Fn f) const
@@ -360,6 +360,48 @@ public:
     }
 
     /**
+     * Returns a list resulting from applying the given function `f` to each
+     * element of this list and concatenating the results.
+     *
+     * @tparam Fn the type of the function to apply to each element of this list
+     * @tparam B the element type of the returned list
+     * @return a list resulting from applying the given function `f` to each
+     *         element of this list and concatenating the results
+     */
+    template<typename Fn, typename B = Decay<typename HKT<Ret<Fn, A>>::L>>
+    List<B> flatMap(Fn f) const
+    {
+        using BN = typename List<B>::Node;
+
+        std::vector<Ptr<B>> buf;
+        foreachImpl([&f, &buf](const Ptr<A> &x) {
+            f(*x).foreachImpl([&buf](const Ptr<B> &y) {
+                buf.emplace_back(y);
+            });
+        });
+
+        auto hd = BN::create();
+        for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
+            hd = BN::create(std::move(*it), std::move(hd));
+        }
+
+        return hd;
+    }
+
+    /**
+     * Returns a list resulting from concatenating all element lists of this list.
+     *
+     * @tparam A1 the same as A, used to make SFINAE work
+     * @tparam B the element type of the returned list
+     * @return a list resulting from concatenating all element lists of this list.
+     */
+    template<typename A1 = A, typename B = typename HKT<A1>::L>
+    List<B> flatten() const
+    {
+        return flatMap(identity<const List<B> &>);
+    }
+
+    /**
      * Returns the element at the specified position of this list.
      *
      * @param index index of the element to return
@@ -418,7 +460,6 @@ private:
     friend class List;
 
     class Node final {
-    private:
         static const class Priv final {} priv_;
 
     public:
