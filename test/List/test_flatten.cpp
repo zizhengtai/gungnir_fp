@@ -7,10 +7,10 @@ using gungnir::List;
 
 TEST_CASE("test List flatten", "[List][flatten]") {
 
-    using PI = std::unique_ptr<int>;
     using LI = List<int>;
     using LLI = List<LI>;
     using LLLI = List<LLI>;
+    using PI = std::unique_ptr<int>;
     using LPI = List<PI>;
     using LLPI = List<LPI>;
     using LLLPI = List<LLPI>;
