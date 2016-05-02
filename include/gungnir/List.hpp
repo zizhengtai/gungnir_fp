@@ -262,7 +262,7 @@ public:
     List take(std::size_t n) const
     {
         n = std::min(n, size());
-        
+
         std::vector<Ptr<A>> buf;
         for (auto nd = node_.get(); n > 0; nd = nd->tail.get(), --n) {
             buf.emplace_back(nd->head);
