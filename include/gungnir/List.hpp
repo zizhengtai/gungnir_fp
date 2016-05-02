@@ -452,11 +452,30 @@ public:
     bool contains(const A &x) const
     {
         for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
-            if (x == *(n->head)) {
+            if (*(n->head) == x) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the number of elements of this list that are equal (as determined
+     * by `==`) to `x`.
+     *
+     * @param x the object to test against
+     * @return the number of elements of this list that are equal (as determined
+     *         by `==`) to `x`
+     */
+    std::size_t count(const A &x) const
+    {
+        std::size_t num = 0;
+        foreachImpl([&x, &num](const Ptr<A> &p) {
+            if (*p == x) {
+                ++num;
+            }
+        });
+        return num;
     }
 
     /**
