@@ -470,8 +470,29 @@ public:
     std::size_t count(const A &x) const
     {
         std::size_t num = 0;
-        foreachImpl([&x, &num](const Ptr<A> &p) {
-            if (*p == x) {
+        foreachImpl([&x, &num](const Ptr<A> &y) {
+            if (*y == x) {
+                ++num;
+            }
+        });
+        return num;
+    }
+
+    /**
+     * Returns the number of elements of this list that satisfy
+     * the given predicate.
+     *
+     * @tparam Fn the type of the predicate
+     * @param the predicate
+     * @return the number of elements of this list that satisfy
+     *         the given predicate
+     */
+    template<typename Fn>
+    std::size_t count(Fn p) const
+    {
+        std::size_t num = 0;
+        foreachImpl([&p, &num](const Ptr<A> &y) {
+            if (p(*y)) {
                 ++num;
             }
         });
