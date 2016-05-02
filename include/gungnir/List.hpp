@@ -442,6 +442,24 @@ public:
     }
 
     /**
+     * Returns `true` if this list has an element that is equal (as determined
+     * by `==`) to `x`, `false` otherwise.
+     *
+     * @param x the object to test against
+     * @return `true` if this list has an element that is equal (as determined
+     *         by `==`) to `x`, `false` otherwise
+     */
+    bool contains(const A &x) const
+    {
+        for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
+            if (x == *(n->head)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns the element at the specified position of this list.
      *
      * @param index index of the element to return
