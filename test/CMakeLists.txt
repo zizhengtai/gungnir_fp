@@ -25,4 +25,5 @@ add_executable(test_all
   List/test_flatten.cpp
   List/test_exists.cpp
   List/test_forall.cpp
+  List/test_contains.cpp
 )
