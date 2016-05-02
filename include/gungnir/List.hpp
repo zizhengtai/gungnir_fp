@@ -483,7 +483,7 @@ public:
      * the given predicate.
      *
      * @tparam Fn the type of the predicate
-     * @param the predicate
+     * @param p the predicate
      * @return the number of elements of this list that satisfy
      *         the given predicate
      */
