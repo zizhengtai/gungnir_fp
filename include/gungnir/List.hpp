@@ -442,12 +442,12 @@ public:
     }
 
     /**
-     * Returns `true` if this list has an element that is equal (as determined
-     * by `==`) to `x`, `false` otherwise.
+     * Returns `true` if this list has an element that is equal
+     * (as determined by `==`) to `x`, `false` otherwise.
      *
      * @param x the object to test against
-     * @return `true` if this list has an element that is equal (as determined
-     *         by `==`) to `x`, `false` otherwise
+     * @return `true` if this list has an element that is equal
+     *         (as determined by `==`) to `x`, `false` otherwise
      */
     bool contains(const A &x) const
     {
@@ -460,12 +460,12 @@ public:
     }
 
     /**
-     * Returns the number of elements of this list that are equal (as determined
-     * by `==`) to `x`.
+     * Returns the number of elements of this list that are equal
+     * (as determined by `==`) to `x`.
      *
      * @param x the object to test against
-     * @return the number of elements of this list that are equal (as determined
-     *         by `==`) to `x`
+     * @return the number of elements of this list that are equal
+     *         (as determined by `==`) to `x`
      */
     std::size_t count(const A &x) const
     {
