@@ -27,4 +27,5 @@ add_executable(test_all
   List/test_forall.cpp
   List/test_contains.cpp
   List/test_count.cpp
+  List/test_prepend.cpp
 )
