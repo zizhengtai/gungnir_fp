@@ -1,0 +1,8 @@
+site_name: Gungnir
+site_url: http://gungnir.io/docs
+repo_url: https://github.com/ZizhengTai/gungnir
+site_description: Documentation for Gungnir
+site_author: Zizheng Tai
+pages:
+  - Home: index.md
+theme: yeti
