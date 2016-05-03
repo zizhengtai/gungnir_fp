@@ -58,6 +58,19 @@ struct BoolPack;
 template<bool... V>
 using AllTrue = std::is_same<BoolPack<true, V...>, BoolPack<V..., true>>;
 
+template<std::size_t...>
+struct Seq {};
+
+template<std::size_t N, std::size_t... S>
+struct GenSeq {
+    using type = typename GenSeq<N - 1, N - 1, S...>::type;
+};
+
+template<std::size_t... S>
+struct GenSeq<0, S...> {
+    using type = Seq<S...>;
+};
+
 }  // namespace detail
 
 // Convenience identity function.
