@@ -58,7 +58,7 @@ public:
      */
     ~LazyVal()
     {
-        if (val_ != nullptr) {
+        if (val_) {
             val_->~T();
         }
     }
@@ -82,7 +82,7 @@ public:
      */
     const T & get() const
     {
-        if (val_ == nullptr) {
+        if (!val_) {
             create(typename GenSeq<sizeof... (Args)>::type());
         }
         return *val_;
