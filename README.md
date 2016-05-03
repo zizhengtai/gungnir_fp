@@ -14,7 +14,7 @@ Some of the more frequently used data structures include:
 
 * [`List`](include/gungnir/List.hpp)
 * `Vector`
-# `Option`
+* `Option`
 * `Stream`
 * `Iterator`
 
