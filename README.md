@@ -14,8 +14,16 @@ Some of the more frequently used data structures include:
 
 * [`List`](include/gungnir/List.hpp)
 * `Vector`
+# `Option`
 * `Stream`
 * `Iterator`
+
+## Lazy Evaluation
+
+Gungnir also provides utilities to facilitate lazy evaluation in C++:
+
+* [`lazyVal<T>(args...)`](include/gungnir/lazy.hpp)
+* [`lazyEval(f, args...)`](include/gungnir/lazy.hpp)
 
 ## License
 

@@ -22,6 +22,7 @@
 #ifndef GUNGNIR_LAZY_HPP
 #define GUNGNIR_LAZY_HPP
 
+#include <memory>
 #include <functional>
 #include <utility>
 
@@ -62,16 +63,6 @@ public:
 
     /** Default move assignment operator. */
     LazyVal & operator=(LazyVal &&) = default;
-
-    /**
-     * Destructs this lazy value.
-     */
-    ~LazyVal()
-    {
-        if (val_ != nullptr) {
-            val_->~T();
-        }
-    }
 
     /**
      * Returns the underlying value, constructing it if necessary.
@@ -141,12 +132,11 @@ private:
     template<std::size_t... S>
     void create(Seq<S...>) const
     {
-        val_ = new (&storage_) T(std::get<S>(args_)...);
+        val_.reset(new T(std::get<S>(args_)...));
     }
 
     mutable std::tuple<Forward<Args>...> args_;
-    mutable typename std::aligned_storage<sizeof (T), alignof (T)>::type storage_;
-    mutable T *val_ = nullptr;
+    mutable std::unique_ptr<T> val_;
 };
 
 /**
