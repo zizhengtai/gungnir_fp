@@ -15,13 +15,9 @@ TEST_CASE("test lazyVal", "[lazyVal]") {
     class Foo {
     public:
         Foo() noexcept { ++count; }
-
         Foo(UP up) noexcept : up(std::move(up)) { ++count; }
-
-        Foo(SP sp) noexcept : sp(std::move(sp)) { ++count; }
-
-        Foo(UP up, SP sp) noexcept : up(std::move(up)), sp(std::move(sp)) { ++count; }
-
+        Foo(const SP &sp) noexcept : sp(std::move(sp)) { ++count; }
+        Foo(UP up, const SP &sp) noexcept : up(std::move(up)), sp(std::move(sp)) { ++count; }
         Foo(Foo &&) = default;
 
         UP up;

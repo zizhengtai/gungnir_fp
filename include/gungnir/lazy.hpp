@@ -26,7 +26,6 @@
 #include <functional>
 #include <utility>
 
-//#include "gungnir/detail/lazy.hpp"
 #include "gungnir/detail/util.hpp"
 
 namespace gungnir {
@@ -50,7 +49,7 @@ public:
      * @param args the arguments passed to the constructor of `T`
      */
     explicit LazyVal(Args&&... args) noexcept
-        : args_(std::forward<Args>(args)...)
+        : args_(new std::tuple<Decay<Args>...>(std::forward<Args>(args)...))
     {}
 
     /** Deleted copy constructor. */
@@ -133,10 +132,11 @@ private:
     template<std::size_t... S>
     void create(Seq<S...>) const
     {
-        val_.reset(new T(std::move(std::get<S>(args_))...));
+        val_.reset(new T(std::move(std::get<S>(*args_))...));
+        args_.reset(nullptr);
     }
 
-    mutable std::tuple<Decay<Args>...> args_;
+    mutable std::unique_ptr<std::tuple<Decay<Args>...>> args_;
     mutable std::unique_ptr<T> val_;
 };
 
