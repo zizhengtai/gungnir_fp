@@ -197,7 +197,6 @@ public:
 
         std::vector<Ptr<B>> buf;
         buf.reserve(size());
-
         foreachImpl([&buf, &ff](const Ptr<A> &x) {
             buf.emplace_back(std::make_shared<const B>(ff(*x)));
         });
@@ -208,7 +207,7 @@ public:
             hd = BN::create(std::move(*it), std::move(hd));
         }
 
-        return hd;
+        return std::move(hd);
     }
 
     /**
@@ -223,7 +222,6 @@ public:
     List filter(Fn p) const
     {
         std::vector<Ptr<A>> buf;
-
         foreachImpl([&p, &buf](const Ptr<A> &x) {
             if (p(*x)) {
                 buf.emplace_back(x);
@@ -235,7 +233,7 @@ public:
             hd = Node::create(std::move(*it), std::move(hd));
         }
 
-        return hd;
+        return std::move(hd);
     }
 
     /**
@@ -249,7 +247,7 @@ public:
         foreachImpl([&hd](const Ptr<A> &x) {
             hd = Node::create(x, std::move(hd));
         });
-        return hd;
+        return std::move(hd);
     }
 
     /**
@@ -273,7 +271,7 @@ public:
             hd = Node::create(std::move(*it), std::move(hd));
         }
 
-        return hd;
+        return std::move(hd);
     }
 
     /**
@@ -371,8 +369,6 @@ public:
     template<typename Fn, typename B = Decay<typename HKT<Ret<Fn, A>>::L>>
     List<B> flatMap(Fn f) const
     {
-        using BN = typename List<B>::Node;
-
         std::vector<Ptr<B>> buf;
         foreachImpl([&f, &buf](const Ptr<A> &x) {
             f(*x).foreachImpl([&buf](const Ptr<B> &y) {
@@ -380,12 +376,13 @@ public:
             });
         });
 
+        using BN = typename List<B>::Node;
         auto hd = BN::create();
         for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
             hd = BN::create(std::move(*it), std::move(hd));
         }
 
-        return hd;
+        return std::move(hd);
     }
 
     /**
@@ -517,6 +514,29 @@ public:
     }
 
     /**
+     * Returns a list resulting from concatenating this list and `that`.
+     *
+     * @param that the list whose elements follow those of this list
+     *             in the returned list
+     * @return a list resulting from concatenating this list and `that`
+     */
+    List concat(const List &that) const
+    {
+        std::vector<Ptr<A>> buf;
+        buf.reserve(size());
+        foreachImpl([&buf](const Ptr<A> &x) {
+            buf.emplace_back(x);
+        });
+
+        Ptr<A> hd = that.node_;
+        for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
+            hd = Node::create(std::move(*it), std::move(hd));
+        }
+
+        return std::move(hd);
+    }
+
+    /**
      * Returns the element at the specified position of this list.
      *
      * @param index index of the element to return
@@ -603,7 +623,7 @@ private:
         const Ptr<Node> tail;
     };
 
-    List(Ptr< Node> node) noexcept : node_(std::move(node))
+    List(Ptr<Node> node) noexcept : node_(std::move(node))
     {}
 
     template<typename Fn>
