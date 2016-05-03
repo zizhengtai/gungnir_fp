@@ -93,7 +93,8 @@ public:
      */
     T & get()
     {
-        return const_cast<T &>(static_cast<const T *>(this)->get());
+        return const_cast<T &>(
+                static_cast<const LazyVal<T, Args...> *>(this)->get());
     }
 
     /**
@@ -112,6 +113,26 @@ public:
      * @return the underlying value
      */
     operator T &()
+    {
+        return get();
+    }
+
+    /**
+     * Returns the underlying value, constructing it if necessary.
+     *
+     * @return the underlying value
+     */
+    const T & operator()() const
+    {
+        return get();
+    }
+
+    /**
+     * Returns the underlying value, constructing it if necessary.
+     *
+     * @return the underlying value
+     */
+    T & operator()()
     {
         return get();
     }
