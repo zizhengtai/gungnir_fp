@@ -201,13 +201,9 @@ public:
             buf.emplace_back(std::make_shared<const B>(ff(*x)));
         });
 
-        using BN = typename List<B>::Node;
-        auto hd = BN::create();
-        for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
-            hd = BN::create(std::move(*it), std::move(hd));
-        }
-
-        return std::move(hd);
+        return List<B>::toList(
+                std::make_move_iterator(buf.rbegin()),
+                std::make_move_iterator(buf.rend()));
     }
 
     /**
@@ -228,12 +224,9 @@ public:
             }
         });
 
-        auto hd = Node::create();
-        for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
-            hd = Node::create(std::move(*it), std::move(hd));
-        }
-
-        return std::move(hd);
+        return toList(
+                std::make_move_iterator(buf.rbegin()),
+                std::make_move_iterator(buf.rend()));
     }
 
     /**
@@ -266,12 +259,9 @@ public:
             buf.emplace_back(nd->head);
         }
 
-        auto hd = Node::create();
-        for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
-            hd = Node::create(std::move(*it), std::move(hd));
-        }
-
-        return std::move(hd);
+        return toList(
+                std::make_move_iterator(buf.rbegin()),
+                std::make_move_iterator(buf.rend()));
     }
 
     /**
@@ -303,7 +293,6 @@ public:
                 n->size > 0 && p(*(n->head));
                 n = n->tail.get(), ++num) {
         }
-
         return take(num);
     }
 
@@ -353,7 +342,6 @@ public:
                 n->size > 0 && p(*(n->head));
                 n = n->tail.get(), ++num) {
         }
-
         return drop(num);
     }
 
@@ -376,13 +364,9 @@ public:
             });
         });
 
-        using BN = typename List<B>::Node;
-        auto hd = BN::create();
-        for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
-            hd = BN::create(std::move(*it), std::move(hd));
-        }
-
-        return std::move(hd);
+        return List<B>::toList(
+                std::make_move_iterator(buf.rbegin()),
+                std::make_move_iterator(buf.rend()));
     }
 
     /**
@@ -534,12 +518,10 @@ public:
             buf.emplace_back(x);
         });
 
-        Ptr<Node> hd = that.node_;
-        for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
-            hd = Node::create(std::move(*it), std::move(hd));
-        }
-
-        return std::move(hd);
+        return toList(
+                std::make_move_iterator(buf.rbegin()),
+                std::make_move_iterator(buf.rend()),
+                that.node_);
     }
 
     /**
@@ -638,6 +620,18 @@ private:
         for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
             f(n->head);
         }
+    }
+
+    template<typename RevIter>
+    static List toList(
+            RevIter rbegin,
+            RevIter rend,
+            Ptr<Node> head = Node::create())
+    {
+        for (; rbegin != rend; ++rbegin) {
+            head = Node::create(*rbegin, std::move(head));
+        }
+        return std::move(head);
     }
 
     Ptr<Node> node_;
