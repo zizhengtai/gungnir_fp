@@ -522,13 +522,19 @@ public:
      */
     List concat(const List &that) const
     {
+        if (isEmpty()) {
+            return that;
+        } else if (that.isEmpty()) {
+            return *this;
+        }
+
         std::vector<Ptr<A>> buf;
         buf.reserve(size());
         foreachImpl([&buf](const Ptr<A> &x) {
             buf.emplace_back(x);
         });
 
-        Ptr<A> hd = that.node_;
+        Ptr<Node> hd = that.node_;
         for (auto it = buf.rbegin(); it != buf.rend(); ++it) {
             hd = Node::create(std::move(*it), std::move(hd));
         }
