@@ -6,6 +6,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror -pedant
 
 add_executable(test_all
   test_all.cpp
+
   List/test_constructors.cpp
   List/test_equal.cpp
   List/test_head.cpp
@@ -28,4 +29,7 @@ add_executable(test_all
   List/test_contains.cpp
   List/test_count.cpp
   List/test_prepend.cpp
+
+  lazy/test_lazy_val.cpp
+  lazy/test_lazy_eval.cpp
 )

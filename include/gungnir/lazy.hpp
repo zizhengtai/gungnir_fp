@@ -78,12 +78,32 @@ public:
      *
      * @return the underlying value
      */
-    T & get()
+    const T & get() const
     {
         if (val_ == nullptr) {
             create(typename GenSeq<sizeof... (Args)>::type());
         }
         return *val_;
+    }
+
+    /**
+     * Returns the underlying value, constructing it if necessary.
+     *
+     * @return the underlying value
+     */
+    T & get()
+    {
+        return const_cast<T &>(static_cast<const T *>(this)->get());
+    }
+
+    /**
+     * Returns the underlying value, constructing it if necessary.
+     *
+     * @return the underlying value
+     */
+    operator const T &() const
+    {
+        return get();
     }
 
     /**
@@ -98,14 +118,14 @@ public:
 
 private:
     template<std::size_t... S>
-    void create(Seq<S...>)
+    void create(Seq<S...>) const
     {
         val_ = new (&storage_) T(std::get<S>(args_)...);
     }
 
-    std::tuple<Forward<Args>...> args_;
-    typename std::aligned_storage<sizeof (T), alignof (T)>::type storage_;
-    T *val_ = nullptr;
+    mutable std::tuple<Forward<Args>...> args_;
+    mutable typename std::aligned_storage<sizeof (T), alignof (T)>::type storage_;
+    mutable T *val_ = nullptr;
 };
 
 /**
