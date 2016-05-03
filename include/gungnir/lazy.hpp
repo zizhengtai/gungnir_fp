@@ -24,6 +24,7 @@
 
 #include <memory>
 #include <functional>
+#include <type_traits>
 #include <utility>
 
 #include "gungnir/detail/util.hpp"
@@ -51,6 +52,16 @@ public:
     explicit LazyVal(Args&&... args) noexcept
         : args_(new std::tuple<Decay<Args>...>(std::forward<Args>(args)...))
     {}
+
+    /**
+     * Destructs the underlying value, if needed.
+     */
+    ~LazyVal()
+    {
+        if (val_ != nullptr) {
+            val_->~T();
+        }
+    }
 
     /** Deleted copy constructor. */
     LazyVal(const LazyVal &) = delete;
@@ -132,12 +143,13 @@ private:
     template<std::size_t... S>
     void create(Seq<S...>) const
     {
-        val_.reset(new T(std::move(std::get<S>(*args_))...));
+        val_ = new (&buf_) T(std::move(std::get<S>(*args_))...);
         args_.reset(nullptr);
     }
 
     mutable std::unique_ptr<std::tuple<Decay<Args>...>> args_;
-    mutable std::unique_ptr<T> val_;
+    mutable typename std::aligned_storage<sizeof (T), alignof (T)>::type buf_;
+    mutable T *val_ = nullptr;
 };
 
 /**
