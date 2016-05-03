@@ -30,7 +30,4 @@ add_executable(test_all
   List/test_count.cpp
   List/test_prepend.cpp
   List/test_concat.cpp
-
-  lazy/test_lazy_val.cpp
-  lazy/test_lazy_eval.cpp
 )
