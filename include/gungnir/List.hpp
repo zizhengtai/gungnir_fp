@@ -539,6 +539,36 @@ public:
     }
 
     /**
+     * Returns a copy of this list with one single replaced element.
+     *
+     * @tparam Args the types of the argument passed to the constructor of `A`
+     * @param index the position of the replacement
+     * @param args the argument passed to the constructor of `A`
+     * @return a copy of this list with the element at position `index`
+     *         replaced by a new element constructed in-place from `args`
+     * @throws std::out_of_range if `index >= size()`
+     */
+    template<typename... Args>
+    List updated(std::size_t index, Args&&... args) const
+    {
+        if (index >= size()) {
+            throw std::out_of_range("index out of range");
+        }
+
+        std::vector<Ptr<A>> buf;
+        auto n = node_.get();
+        for (; index > 0; n = n->tail.get(), --index) {
+            buf.emplace_back(n->head);
+        }
+        return toList(
+                std::make_move_iterator(buf.rbegin()),
+                std::make_move_iterator(buf.rend()),
+                Node::create(
+                    std::make_shared<A>(std::forward<Args>(args)...),
+                    n->tail));
+    }
+
+    /**
      * Returns the element at the specified position of this list.
      *
      * @param index index of the element to return
