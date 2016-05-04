@@ -495,13 +495,13 @@ public:
     }
 
     /**
-     * Returns a list whose head is constructed from `args`, and tail
-     * is this list.
+     * Returns a list whose head is constructed in-place from `args`,
+     * and tail is this list.
      *
      * @tparam Args the types of the arguments passed to the constructor of `A`
      * @param args the arguments passed to the constructor of `A`
-     * @return a list whose head is constructed from `args`, and tail
-     *         is this list
+     * @return a list whose head is constructed in-place from `args`,
+     *         and tail is this list
      */
     template<typename... Args>
     List prepend(Args&&... args) const
