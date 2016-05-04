@@ -42,6 +42,22 @@ TEST_CASE("test List slice", "[List][slice]") {
     }
     SECTION("List with multiple elements") {
         List<int> xs(1, 2, 3, 4, 5);
+        REQUIRE(xs.slice(0, 0).isEmpty());
+        REQUIRE(xs.slice(0, 3) == List<int>(1, 2, 3));
+        REQUIRE(xs.slice(0, 100) == List<int>(1, 2, 3, 4, 5));
+        REQUIRE(xs.slice(2, 0).isEmpty());
+        REQUIRE(xs.slice(2, 2).isEmpty());
+        REQUIRE(xs.slice(2, 4) == List<int>(3, 4));
+        REQUIRE(xs.slice(2, 100) == List<int>(3, 4, 5));
+        REQUIRE(xs.slice(5, 0).isEmpty());
+        REQUIRE(xs.slice(5, 5).isEmpty());
+        REQUIRE(xs.slice(5, 100).isEmpty());
+        REQUIRE(xs == List<int>(1, 2, 3, 4, 5));
+
+        const auto toInt = [](const List<PI> &ps) {
+            return ps.map([](const PI &p) { return *p; });
+        };
+
         List<PI> ys(
             PI(new int(5)),
             PI(new int(4)),
@@ -49,13 +65,16 @@ TEST_CASE("test List slice", "[List][slice]") {
             PI(new int(2)),
             PI(new int(1))
         );
-        for (int i: {0, 2, 4, 6}) {
-            for (int j: {std::max(0, i - 2), i, i + 2}) {
-                REQUIRE(xs.slice(i, j) == xs.drop(i).take(std::max(0, j - i)));
-                REQUIRE(ys.slice(i, j) == ys.drop(i).take(std::max(0, j - i)));
-            }
-        }
-        REQUIRE(xs == List<int>(1, 2, 3, 4, 5));
-        REQUIRE(ys.map([](const PI &p) { return *p; }) == List<int>(5, 4, 3, 2, 1));
+        REQUIRE(ys.slice(0, 0).isEmpty());
+        REQUIRE(toInt(ys.slice(0, 3)) == List<int>(5, 4, 3));
+        REQUIRE(toInt(ys.slice(0, 100)) == List<int>(5, 4, 3, 2, 1));
+        REQUIRE(ys.slice(2, 0).isEmpty());
+        REQUIRE(ys.slice(2, 2).isEmpty());
+        REQUIRE(toInt(ys.slice(2, 4)) == List<int>(3, 2));
+        REQUIRE(toInt(ys.slice(2, 100)) == List<int>(3, 2, 1));
+        REQUIRE(ys.slice(5, 0).isEmpty());
+        REQUIRE(ys.slice(5, 5).isEmpty());
+        REQUIRE(ys.slice(5, 100).isEmpty());
+        REQUIRE(toInt(ys) == List<int>(5, 4, 3, 2, 1));
     }
 }
