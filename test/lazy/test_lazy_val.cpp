@@ -12,8 +12,7 @@ TEST_CASE("test lazyVal", "[lazyVal]") {
 
     static std::size_t count = 0;
 
-    class Foo {
-    public:
+    struct Foo {
         Foo() noexcept { ++count; }
         Foo(UP up) noexcept : up(std::move(up)) { ++count; }
         Foo(const SP &sp) noexcept : sp(std::move(sp)) { ++count; }

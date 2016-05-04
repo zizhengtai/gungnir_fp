@@ -42,7 +42,7 @@ using namespace detail;
  * @tparam Args the types of the arguments passed to the constructor of `T`
  */
 template<typename T, typename... Args>
-class LazyVal {
+class LazyVal final {
 public:
     /**
      * Constructs a lazy value from the given arguments.
