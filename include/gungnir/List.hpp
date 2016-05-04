@@ -360,6 +360,25 @@ public:
     }
 
     /**
+     * Returns a list consisting of all elements of this list starting at
+     * position `from` and extending up until position `until`,
+     * or an empty list if `from >= until` or `from >= size()`.
+     *
+     * @param from the index of the starting position (included)
+     * @param until the index of the ending position (excluded)
+     * @return a list consisting of all elements of this list starting at
+     *         position `from` and extending up until position `until`,
+     *         or an empty list if `from >= until` or `from >= size()`
+     */
+    List slice(std::size_t from, std::size_t until) const
+    {
+        if (from >= until) {
+            return List();
+        }
+        return drop(from).take(until - from);
+    }
+
+    /**
      * Returns a list resulting from applying the given function `f` to each
      * element of this list and concatenating the results.
      *
