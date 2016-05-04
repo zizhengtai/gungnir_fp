@@ -142,7 +142,7 @@ public:
 
     /**
      * Returns all elements of this list except the first one.
-
+     *
      * @return all elements of this list except the first one
      * @throws std::out_of_range if this list is empty
      */
@@ -152,6 +152,20 @@ public:
             throw std::out_of_range("tail of empty list");
         }
         return node_->tail;
+    }
+
+    /**
+     * Returns the last element of this list.
+     *
+     * @return the last element of this list
+     * @throws std::out_of_range if this list is empty
+     */
+    const A & last() const
+    {
+        if (isEmpty()) {
+            throw std::out_of_range("last of empty list");
+        }
+        return (*this)[size() - 1];
     }
 
     /**
