@@ -11,6 +11,7 @@ add_executable(test_all
   List/test_equal.cpp
   List/test_head.cpp
   List/test_tail.cpp
+  List/test_last.cpp
   List/test_init.cpp
   List/test_foreach.cpp
   List/test_map.cpp
