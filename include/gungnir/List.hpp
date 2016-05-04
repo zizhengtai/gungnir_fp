@@ -556,10 +556,12 @@ public:
         }
 
         std::vector<Ptr<A>> buf;
+        buf.reserve(index);
         auto n = node_.get();
         for (; index > 0; n = n->tail.get(), --index) {
             buf.emplace_back(n->head);
         }
+
         return toList(
                 std::make_move_iterator(buf.rbegin()),
                 std::make_move_iterator(buf.rend()),
