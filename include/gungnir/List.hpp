@@ -796,7 +796,16 @@ public:
     }
 
     /**
-     * TODO
+     * @brief Returns a list consisting of the intermediate results of
+     *        a left fold over this list with the given start value and
+     *        binary operator.
+     *
+     * @tparam B the result type of the binary operator
+     * @tparam Fn the type of the binary operator
+     * @param z the start value
+     * @param op the binary operator
+     * @return a list consisting of the intermediate results of a left fold
+     *         over this list with the given start value and binary operator
      */
     template<typename B, typename Fn>
     List<B> scanLeft(B z, Fn op) const
