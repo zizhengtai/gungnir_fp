@@ -748,6 +748,33 @@ public:
     }
 
     /**
+     * @brief Returns a list resulting from wrapping the elements of this list
+     *        in `std::reference_wrapper<const A>`s.
+     *
+     * @return a list resulting from wrapping the elements of this list
+     *         in `std::reference_wrapper<const A>`s
+     */
+    List<std::reference_wrapper<const A>> cref() const
+    {
+        return map([](const A &x) { return std::cref(x); });
+    }
+
+    template<typename B, typename Fn>
+    List<B> scanLeft(B z, Fn op) const
+    {
+        std::vector<Ptr<B>> buf;
+        buf.reserve(size() + 1);
+        buf.emplace_back(std::make_shared<B>(std::move(z)));
+        foreachImpl([&buf, &op] (const Ptr<A> &x) {
+            buf.emplace_back(std::make_shared<B>(op(*buf.back(), *x)));
+        });
+
+        return List<B>::toList(
+                std::make_move_iterator(buf.rbegin()),
+                std::make_move_iterator(buf.rend()));
+    }
+
+    /**
      * @brief Returns the element at the specified position of this list.
      *
      * @param index index of the element to return
@@ -806,24 +833,24 @@ private:
     friend class List;
 
     class Node final {
-        static const class Priv final {} priv_;
+        class Priv final {};
 
     public:
         static Ptr<Node> create()
         {
-            return std::make_shared<const Node>(priv_);
+            return std::make_shared<const Node>(Priv());
         }
 
         static Ptr<Node> create(Ptr<A> head, Ptr<Node> tail)
         {
             return std::make_shared<const Node>(
-                priv_, std::move(head), std::move(tail));
+                    Priv(), std::move(head), std::move(tail));
         }
 
-        Node(const Priv &) noexcept : size(0)
+        Node(Priv) noexcept : size(0)
         {}
 
-        Node(const Priv &, Ptr<A> head, Ptr<Node> tail) noexcept
+        Node(Priv, Ptr<A> head, Ptr<Node> tail) noexcept
             : size(1 + tail->size)
             , head(std::move(head))
             , tail(std::move(tail))
@@ -859,9 +886,6 @@ private:
 
     Ptr<Node> node_;
 };
-
-template<typename A>
-const typename List<A>::Node::Priv List<A>::Node::priv_{};
 
 }  // namespace gungnir
 
