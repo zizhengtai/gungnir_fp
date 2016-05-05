@@ -770,7 +770,7 @@ public:
      * The list elements are copied into the pairs. To avoid copying, transform
      * the lists with `cref()` and zip the resulting lists instead.
      *
-     * @tparam the element type of `that`
+     * @tparam B the element type of `that`
      * @param that the list providing the second element of each result pair
      * @return a list formed from this list and `that` by combining
      *         corresponding elements in pairs
@@ -795,6 +795,9 @@ public:
                 std::make_move_iterator(buf.rend()));
     }
 
+    /**
+     * TODO
+     */
     template<typename B, typename Fn>
     List<B> scanLeft(B z, Fn op) const
     {
