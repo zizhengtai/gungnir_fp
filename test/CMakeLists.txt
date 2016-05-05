@@ -38,6 +38,7 @@ add_executable(test_all
   List/test_fold_right.cpp
   List/test_sum.cpp
   List/test_product.cpp
+  List/test_sorted.cpp
 
   lazy/test_lazy_val.cpp
 )
