@@ -40,6 +40,8 @@ add_executable(test_all
   List/test_product.cpp
   List/test_sorted.cpp
   List/test_cref.cpp
+  List/test_zip.cpp
+  List/test_scan_left.cpp
 
   lazy/test_lazy_val.cpp
 )
