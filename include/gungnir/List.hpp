@@ -24,6 +24,7 @@
 #include <memory>
 #include <stdexcept>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 #include "gungnir/detail/util.hpp"
@@ -757,6 +758,38 @@ public:
     List<std::reference_wrapper<const A>> cref() const
     {
         return map([](const A &x) { return std::cref(x); });
+    }
+
+    /**
+     * @brief Returns a list formed from this list and `that` by combining
+     *        corresponding elements in pairs.
+     *
+     * If one of the two lists is longer than the other, its remaining elements
+     * are ignored.
+     *
+     * @tparam the element type of `that`
+     * @param that the list providing the second element of each result pair
+     * @return a list formed from this list and `that` by combining
+     *         corresponding elements in pairs
+     */
+    template<typename B>
+    List<std::pair<A, B>> zip(const List<B> &that) const
+    {
+        using AB = std::pair<A, B>;
+
+        std::size_t s = std::min(size(), that.size());
+        std::vector<Ptr<AB>> buf;
+        buf.reserve(s);
+
+        auto n1 = node_.get();
+        auto n2 = that.node_.get();
+        for (; s > 0; n1 = n1->tail.get(), n2 = n2->tail.get(), --s) {
+            buf.emplace_back(std::make_shared<AB>(*(n1->head), *(n2->head)));
+        }
+
+        return List<AB>::toList(
+                std::make_move_iterator(buf.rbegin()),
+                std::make_move_iterator(buf.rend()));
     }
 
     template<typename B, typename Fn>
