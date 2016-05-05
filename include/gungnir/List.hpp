@@ -594,8 +594,7 @@ public:
      * binary operator. The order in which operations are performed on
      * elements is unspecified and may be nondeterministic.
      *
-     * @tparam A1 the paramter and result type of the binary operator,
-     *            a supertype of `A`
+     * @tparam A1 the result type of the binary operator, a supertype of `A`
      * @tparam Fn the type of the associative binary operator
      * @param z a neutral element for the fold operation; may be added to
      *          the result an arbitrary number of times, and must not change
@@ -636,6 +635,33 @@ public:
         foreachImpl([&z, &op](const Ptr<A> &x) {
             z = op(std::move(z), *x);
         });
+        return std::move(z);
+    }
+
+    /**
+     * Applies a binary operator to a start value and all elements of
+     * this list, going right to left.
+     *
+     * @tparam B the result type of the binary operator
+     * @tparam Fn the type of the binary operator
+     * @param z the start value
+     * @param op the binary operator
+     * @return the result of inserting `op` between consecutive elements of
+     *         this list, going right to left with the start value `z`
+     *         on the right, or `z` if this list is empty
+     */
+    template<typename B, typename Fn>
+    B foldRight(B z, Fn op) const
+    {
+        std::vector<const A *> buf;
+        buf.reserve(size());
+        foreachImpl([&buf](const Ptr<A> &x) {
+            buf.emplace_back(&*x);
+        });
+
+        for (auto it = buf.crbegin(); it != buf.crend(); ++it) {
+            z = op(**it, std::move(z));
+        }
         return std::move(z);
     }
 
