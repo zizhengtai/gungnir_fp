@@ -37,7 +37,7 @@ using namespace detail;
  *
  * @author Zizheng Tai
  * @since 1.0
- * @tparam A the type of the elements
+ * @tparam A the type of the elements; must be a non-reference type
  */
 template<typename A>
 class List final {
