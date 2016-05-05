@@ -60,7 +60,7 @@ public:
      *
      * @param x the only element of this list
      */
-    List(A x) noexcept
+    explicit List(A x) noexcept
         : node_(Node::create(
                     std::make_shared<const A>(std::move(x)),
                     Node::create()))
@@ -152,7 +152,7 @@ public:
         if (isEmpty()) {
             throw std::out_of_range("tail of empty list");
         }
-        return node_->tail;
+        return List(node_->tail);
     }
 
     /**
@@ -255,7 +255,7 @@ public:
         foreachImpl([&hd](const Ptr<A> &x) {
             hd = Node::create(x, std::move(hd));
         });
-        return hd;
+        return List(std::move(hd));
     }
 
     /**
@@ -303,12 +303,16 @@ public:
     template<typename Fn>
     List takeWhile(Fn p) const
     {
-        std::size_t num = 0;
+        std::vector<Ptr<A>> buf;
         for (auto n = node_.get();
                 n->size > 0 && p(*(n->head));
-                n = n->tail.get(), ++num) {
+                n = n->tail.get()) {
+            buf.emplace_back(n->head);
         }
-        return take(num);
+
+        return toList(
+                std::make_move_iterator(buf.rbegin()),
+                std::make_move_iterator(buf.rend()));
     }
 
     /**
@@ -324,8 +328,8 @@ public:
             return List();
         }
         auto pn = &node_;
-        for (; n > 0; pn = &((*pn)->tail), --n) {}
-        return *pn;
+        for (; n > 0; pn = &(*pn)->tail, --n) {}
+        return List(*pn);
     }
 
     /**
@@ -352,12 +356,9 @@ public:
     template<typename Fn>
     List dropWhile(Fn p) const
     {
-        std::size_t num = 0;
-        for (auto n = node_.get();
-                n->size > 0 && p(*(n->head));
-                n = n->tail.get(), ++num) {
-        }
-        return drop(num);
+        auto pn = &node_;
+        for (; (*pn)->size > 0 && p(*((*pn)->head)); pn = &(*pn)->tail) {}
+        return List(*pn);
     }
 
     /**
@@ -528,9 +529,9 @@ public:
     template<typename... Args>
     List prepend(Args&&... args) const
     {
-        return Node::create(
+        return List(Node::create(
                 std::make_shared<A>(std::forward<Args>(args)...),
-                node_);
+                node_));
     }
 
     /**
@@ -909,7 +910,7 @@ private:
         const Ptr<Node> tail;
     };
 
-    List(Ptr<Node> node) noexcept : node_(std::move(node))
+    explicit List(Ptr<Node> node) noexcept : node_(std::move(node))
     {}
 
     template<typename Fn>
@@ -929,7 +930,7 @@ private:
         for (; rbegin != rend; ++rbegin) {
             head = Node::create(*rbegin, std::move(head));
         }
-        return head;
+        return List(std::move(head));
     }
 
     Ptr<Node> node_;
