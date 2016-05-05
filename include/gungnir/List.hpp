@@ -590,6 +590,56 @@ public:
     }
 
     /**
+     * Folds the elements of this list using the specified associative
+     * binary operator. The order in which operations are performed on
+     * elements is unspecified and may be nondeterministic.
+     *
+     * @tparam A1 the paramter and result type of the binary operator,
+     *            a supertype of `A`
+     * @tparam Fn the type of the associative binary operator
+     * @param z a neutral element for the fold operation; may be added to
+     *          the result an arbitrary number of times, and must not change
+     *          the result (e.g., an empty list for list concatenation,
+     *          0 for addition, or 1 for multiplication)
+     * @param op the associative binary operator
+     * @return the result of applying the fold operator `op` between all
+     *         elements of this list and `z`, or `z` if this list is empty
+     */
+    template<
+        typename A1,
+        typename Fn,
+        typename = typename std::enable_if<
+            std::is_same<A1, A>::value ||
+            std::is_base_of<A1, A>::value
+        >::type
+    >
+    A1 fold(A1 z, Fn op) const
+    {
+        return foldLeft(std::move(z), std::move(op));
+    }
+
+    /**
+     * Applies a binary operator to a start value and all elements of
+     * this list, going left to right.
+     *
+     * @tparam B the result type of the binary operator
+     * @tparam Fn the type of the binary operator
+     * @param z the start value
+     * @param op the binary operator
+     * @return the result of inserting `op` between consecutive elements of
+     *         this list, going left to right with the start value `z`
+     *         on the left, or `z` if this list is empty
+     */
+    template<typename B, typename Fn>
+    B foldLeft(B z, Fn op) const
+    {
+        foreachImpl([&z, &op](const Ptr<A> &x) {
+            z = op(std::move(z), *x);
+        });
+        return std::move(z);
+    }
+
+    /**
      * Returns the element at the specified position of this list.
      *
      * @param index index of the element to return
