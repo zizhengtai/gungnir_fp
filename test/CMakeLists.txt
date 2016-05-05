@@ -33,6 +33,9 @@ add_executable(test_all
   List/test_prepend.cpp
   List/test_concat.cpp
   List/test_updated.cpp
+  List/test_fold.cpp
+  List/test_fold_left.cpp
+  List/test_fold_right.cpp
 
   lazy/test_lazy_val.cpp
 )
