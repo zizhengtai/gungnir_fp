@@ -666,6 +666,34 @@ public:
     }
 
     /**
+     * Returns the sum of all elements of this list, or 0 if this list is empty.
+     *
+     * @return the sum of all elements of this list, or 0 if this list is empty
+     */
+    A sum() const
+    {
+        A acc = 0;
+        foreachImpl([](const Ptr<A> &x) {
+            acc += *x;
+        });
+        return acc;
+    }
+
+    /**
+     * Returns the product of all elements of this list, or 1 if this list is empty.
+     *
+     * @return the product of all elements of this list, or 1 if this list is empty
+     */
+    A product() const
+    {
+        A acc = 1;
+        foreachImpl([](const Ptr<A> &x) {
+            acc *= *x;
+        });
+        return acc;
+    }
+
+    /**
      * Returns the element at the specified position of this list.
      *
      * @param index index of the element to return
