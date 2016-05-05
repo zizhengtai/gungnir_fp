@@ -673,7 +673,7 @@ public:
     A sum() const
     {
         A acc = 0;
-        foreachImpl([](const Ptr<A> &x) {
+        foreachImpl([&acc](const Ptr<A> &x) {
             acc += *x;
         });
         return acc;
@@ -687,7 +687,7 @@ public:
     A product() const
     {
         A acc = 1;
-        foreachImpl([](const Ptr<A> &x) {
+        foreachImpl([&acc](const Ptr<A> &x) {
             acc *= *x;
         });
         return acc;

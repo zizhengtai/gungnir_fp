@@ -36,6 +36,8 @@ add_executable(test_all
   List/test_fold.cpp
   List/test_fold_left.cpp
   List/test_fold_right.cpp
+  List/test_sum.cpp
+  List/test_product.cpp
 
   lazy/test_lazy_val.cpp
 )
