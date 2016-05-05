@@ -767,6 +767,9 @@ public:
      * If one of the two lists is longer than the other, its remaining elements
      * are ignored.
      *
+     * The list elements are copied into the pairs. To avoid copying, transform
+     * the lists with `cref()` and zip the resulting lists instead.
+     *
      * @tparam the element type of `that`
      * @param that the list providing the second element of each result pair
      * @return a list formed from this list and `that` by combining
