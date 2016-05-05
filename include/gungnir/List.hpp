@@ -705,7 +705,7 @@ public:
      *        ascending order, as determined by the `<` operator.
      *
      * The sort is stable. That is, equal elements appear in the same order
-     * in the sorted sequence as in the original.
+     * in the sorted list as in the original.
      *
      * @return a list consisting of elements of this list sorted in
      *         ascending order, as determined by the `<` operator
@@ -720,7 +720,7 @@ public:
      *        ascending order, as determined by the given comparator.
      *
      * The sort is stable. That is, equal elements appear in the same order
-     * in the sorted sequence as in the original.
+     * in the sorted list as in the original.
      *
      * @tparam Fn the type of the comparator
      * @param lt a comparator that returns `true` if its first argument
