@@ -254,7 +254,7 @@ public:
         foreachImpl([&hd](const Ptr<A> &x) {
             hd = Node::create(x, std::move(hd));
         });
-        return std::move(hd);
+        return hd;
     }
 
     /**
@@ -635,7 +635,7 @@ public:
         foreachImpl([&z, &op](const Ptr<A> &x) {
             z = op(std::move(z), *x);
         });
-        return std::move(z);
+        return z;
     }
 
     /**
@@ -662,7 +662,7 @@ public:
         for (auto it = buf.crbegin(); it != buf.crend(); ++it) {
             z = op(**it, std::move(z));
         }
-        return std::move(z);
+        return z;
     }
 
     /**
@@ -772,7 +772,7 @@ private:
         for (; rbegin != rend; ++rbegin) {
             head = Node::create(*rbegin, std::move(head));
         }
-        return std::move(head);
+        return head;
     }
 
     Ptr<Node> node_;

@@ -19,7 +19,7 @@ TEST_CASE("test List foldLeft", "[List][foldLeft]") {
     using PIRef = const PI &;
 
     struct NoCopy {
-        //NoCopy(const char *val) noexcept : val(val) {}
+        NoCopy(std::string s) : val(std::move(s)) {}
         NoCopy(const NoCopy &) = delete;
         NoCopy(NoCopy &&) = default;
         NoCopy & operator=(const NoCopy &) = delete;
@@ -40,8 +40,9 @@ TEST_CASE("test List foldLeft", "[List][foldLeft]") {
     SECTION("List with one element") {
         List<int> xs(123);
         REQUIRE(xs.foldLeft(321, [](int x, int y) { return x - y; }) == 321 - 123);
-        REQUIRE(xs.foldLeft(NoCopy{"!"}, [](NoCopy x, int y) {
-            return NoCopy{x.val + std::to_string(y)};
+        REQUIRE(xs.foldLeft(NoCopy("!"), [](NoCopy x, int y) {
+            x.val += std::to_string(y);
+            return x;
         }).val == "!123");
 
         List<PI> ys(PI(new int(456)));
@@ -55,7 +56,7 @@ TEST_CASE("test List foldLeft", "[List][foldLeft]") {
     SECTION("List with multiple elements") {
         List<int> xs(1, 2, 3, 4, 5);
         REQUIRE(xs.foldLeft(List<int>(0), [](List<int> x, int y) {
-            return x.prepend(y);
+            return List<int>(y, std::move(x));
         }) == List<int>(5, 4, 3, 2, 1, 0));
 
         List<PI> ys(
