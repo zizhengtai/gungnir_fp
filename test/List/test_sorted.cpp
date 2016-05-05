@@ -81,4 +81,27 @@ TEST_CASE("test List sorted", "[List][sorted]") {
             return ys.sorted(gtP).map(toInt) == List<int>(4, 4, 3, 3, 2, 2, 1, 1, 0, 0);
         }));
     }
+    SECTION("sort is stable") {
+        struct Foo {
+            Foo(int val) noexcept : val_(val) {}
+            int val() const { return val_; }
+            bool operator<(const Foo &) const { return false; }
+        private:
+            const int val_;
+        };
+
+        List<List<int>> xss(
+            List<int>(7, 1, 0, 6, 4, 3, 9, 2, 8, 5),
+            List<int>(0, 9, 5, 2, 3, 1, 7, 8, 4, 6),
+            List<int>(2, 0, 8, 1, 5, 4, 9, 7, 3, 6),
+            List<int>(4, 7, 3, 8, 1, 6, 0, 2, 5, 9)
+        );
+        const auto yss = xss.map([](const List<int> &xs) {
+            return xs.map([](int x) { return Foo(x); });
+        });
+        REQUIRE(yss.size() == 4);
+        for (std::size_t i = 0; i < yss.size(); ++i) {
+            REQUIRE(yss[i].sorted().map(&Foo::val) == xss[i]);
+        }
+    }
 }
