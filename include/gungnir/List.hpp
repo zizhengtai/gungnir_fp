@@ -49,13 +49,13 @@ class List final {
 
 public:
     /**
-     * Constructs an empty list.
+     * @brief Constructs an empty list.
      */
     List() noexcept : node_(Node::create())
     {}
 
     /**
-     * Constructs a list with the given element.
+     * @brief Constructs a list with the given element.
      *
      * @param x the only element of this list
      */
@@ -66,7 +66,7 @@ public:
     {}
 
     /**
-     * Constructs a list with the given head and tail.
+     * @brief Constructs a list with the given head and tail.
      *
      * @param head the first element of this list
      * @param tail all elements of this list except the first one
@@ -78,7 +78,7 @@ public:
     {}
 
     /**
-     * Constructs a list with the given elements.
+     * @brief Constructs a list with the given elements.
      *
      * @tparam Args the types of the given elements
      * @param head the first element of this list
@@ -94,20 +94,20 @@ public:
         : List(std::move(head), List(std::forward<Args>(tail)...))
     {}
 
-    /** Default copy constructor. */
+    /** @brief Default copy constructor. */
     List(const List &) = default;
 
-    /** Default move constructor. */
+    /** @brief Default move constructor. */
     List(List &&) = default;
 
-    /** Default copy assignment operator. */
+    /** @brief Default copy assignment operator. */
     List & operator=(const List &) = default;
 
-    /** Default move assignment operator. */
+    /** @brief Default move assignment operator. */
     List & operator=(List &&) = default;
 
     /**
-     * Returns `true` if this list contains no elements, `false` otherwise.
+     * @brief Returns `true` if this list contains no elements, `false` otherwise.
      *
      * @return `true` if this list contains no elements, `false` otherwise
      */
@@ -117,7 +117,7 @@ public:
     }
 
     /**
-     * Returns the number of elements of this list.
+     * @brief Returns the number of elements of this list.
      *
      * @return the number of elements of this list
      */
@@ -127,7 +127,7 @@ public:
     }
 
     /**
-     * Returns the first element of this list.
+     * @brief Returns the first element of this list.
      *
      * @return the first element of this list
      * @throws std::out_of_range if this list is empty
@@ -141,7 +141,7 @@ public:
     }
 
     /**
-     * Returns all elements of this list except the first one.
+     * @brief Returns all elements of this list except the first one.
      *
      * @return all elements of this list except the first one
      * @throws std::out_of_range if this list is empty
@@ -155,7 +155,7 @@ public:
     }
 
     /**
-     * Returns the last element of this list.
+     * @brief Returns the last element of this list.
      *
      * @return the last element of this list
      * @throws std::out_of_range if this list is empty
@@ -169,7 +169,7 @@ public:
     }
 
     /**
-     * Returns all elements of this list except the last one.
+     * @brief Returns all elements of this list except the last one.
      *
      * @return all elements of this list except the last one
      * @throws std::out_of_range if this list is empty
@@ -195,8 +195,8 @@ public:
     }
 
     /**
-     * Returns a new list resulting from applying a function to
-     * each element of this list.
+     * @brief Returns a new list resulting from applying a function to
+     *        each element of this list.
      *
      * @tparam Fn the type of the function to apply to each element of this list
      * @tparam B the element type of returned list
@@ -221,7 +221,7 @@ public:
     }
 
     /**
-     * Returns all elements of this list that satisfy a predicate.
+     * @brief Returns all elements of this list that satisfy a predicate.
      *
      * @tparam Fn type of the predicate
      * @param p the predicate used to test elements
@@ -244,7 +244,7 @@ public:
     }
 
     /**
-     * Returns a new list with elements of this list in reversed order.
+     * @brief Returns a new list with elements of this list in reversed order.
      *
      * @return a new list with elements of this list in reversed order
      */
@@ -258,7 +258,7 @@ public:
     }
 
     /**
-     * Returns the first `n` elements of this list.
+     * @brief Returns the first `n` elements of this list.
      *
      * @param n the number of elements to take
      * @return a list consisting of the first `n` elements of this list,
@@ -279,7 +279,7 @@ public:
     }
 
     /**
-     * Returns the last `n` elements of this list.
+     * @brief Returns the last `n` elements of this list.
      *
      * @param n the number of elements to take
      * @return a list consisting of the last `n` elements of this list,
@@ -291,8 +291,8 @@ public:
     }
 
     /**
-     * Returns the longest prefix of this list whose elements satisfy
-     * the given predicate.
+     * @brief Returns the longest prefix of this list whose elements satisfy
+     *        the given predicate.
      *
      * @tparam Fn the type of the predicate
      * @param p the predicate
@@ -311,7 +311,7 @@ public:
     }
 
     /**
-     * Returns all elements of this list except the first `n` ones.
+     * @brief Returns all elements of this list except the first `n` ones.
      *
      * @param n the number of elements to drop
      * @return a list consisting of all elements of this list except
@@ -328,7 +328,7 @@ public:
     }
 
     /**
-     * Returns all elements of this list except the last `n` ones.
+     * @brief Returns all elements of this list except the last `n` ones.
      *
      * @param n the number of elements to drop
      * @return a list consisting of all elements of this list except
@@ -340,8 +340,8 @@ public:
     }
 
     /**
-     * Returns the longest suffix of this list whose first element does not
-     * satisfy the given predicate.
+     * @brief Returns the longest suffix of this list whose first element
+     *        does not satisfy the given predicate.
      *
      * @tparam Fn the type of the predicate
      * @param p the predicate
@@ -360,9 +360,10 @@ public:
     }
 
     /**
-     * Returns a list consisting of all elements of this list starting at
-     * position `from` and extending up until position `until`,
-     * or an empty list if `from >= until` or `from >= size()`.
+     * @brief Returns a list consisting of all elements of this list starting at
+     *        position `from` and extending up until position `until`.
+     *
+     * An empty list is returned if `from >= until` or `from >= size()`.
      *
      * @param from the index of the starting position (included)
      * @param until the index of the ending position (excluded)
@@ -379,8 +380,8 @@ public:
     }
 
     /**
-     * Returns a list resulting from applying the given function `f` to each
-     * element of this list and concatenating the results.
+     * @brief Returns a list resulting from applying the given function `f`
+     *        to each element of this list and concatenating the results.
      *
      * @tparam Fn the type of the function to apply to each element of this list
      * @tparam B the element type of the returned list
@@ -403,7 +404,8 @@ public:
     }
 
     /**
-     * Returns a list resulting from concatenating all element lists of this list.
+     * @brief Returns a list resulting from concatenating all element lists
+     *        of this list.
      *
      * @tparam A1 the same as A, used to make SFINAE work
      * @tparam B the element type of the returned list
@@ -416,8 +418,8 @@ public:
     }
 
     /**
-     * Returns `true` if at least one element of this list satisfy the given
-     * predicate, `false` otherwise.
+     * @brief Returns `true` if at least one element of this list satisfy
+     *        the given predicate, `false` otherwise.
      *
      * @tparam Fn the type of the predicate
      * @param p the predicate
@@ -436,8 +438,8 @@ public:
     }
 
     /**
-     * Returns `true` if this list is empty or the given predicate holds for
-     * all elements of this list, `false` otherwise.
+     * @brief Returns `true` if this list is empty or the given predicate
+     *        holds for all elements of this list, `false` otherwise.
      *
      * @tparam Fn the type of the predicate
      * @param p the predicate
@@ -456,8 +458,8 @@ public:
     }
 
     /**
-     * Returns `true` if this list has an element that is equal
-     * (as determined by `==`) to `x`, `false` otherwise.
+     * @brief Returns `true` if this list has an element that is equal
+     *        (as determined by `==`) to `x`, `false` otherwise.
      *
      * @param x the object to test against
      * @return `true` if this list has an element that is equal
@@ -474,8 +476,8 @@ public:
     }
 
     /**
-     * Returns the number of elements of this list that are equal
-     * (as determined by `==`) to `x`.
+     * @brief Returns the number of elements of this list that are equal
+     *        (as determined by `==`) to `x`.
      *
      * @param x the object to test against
      * @return the number of elements of this list that are equal
@@ -493,8 +495,8 @@ public:
     }
 
     /**
-     * Returns the number of elements of this list that satisfy
-     * the given predicate.
+     * @brief Returns the number of elements of this list that satisfy
+     *        the given predicate.
      *
      * @tparam Fn the type of the predicate
      * @param p the predicate
@@ -514,8 +516,8 @@ public:
     }
 
     /**
-     * Returns a list whose head is constructed in-place from `args`,
-     * and tail is this list.
+     * @brief Returns a list whose head is constructed in-place from `args`,
+     *        and tail is this list.
      *
      * @tparam Args the types of the arguments passed to the constructor of `A`
      * @param args the arguments passed to the constructor of `A`
@@ -531,7 +533,7 @@ public:
     }
 
     /**
-     * Returns a list resulting from concatenating this list and `that`.
+     * @brief Returns a list resulting from concatenating this list and `that`.
      *
      * @param that the list whose elements follow those of this list
      *             in the returned list
@@ -558,7 +560,7 @@ public:
     }
 
     /**
-     * Returns a copy of this list with one single replaced element.
+     * @brief Returns a copy of this list with one single replaced element.
      *
      * @tparam Args the types of the argument passed to the constructor of `A`
      * @param index the position of the replacement
@@ -590,9 +592,11 @@ public:
     }
 
     /**
-     * Folds the elements of this list using the specified associative
-     * binary operator. The order in which operations are performed on
-     * elements is unspecified and may be nondeterministic.
+     * @brief Folds the elements of this list using the specified associative
+     *        binary operator.
+     *
+     * The order in which operations are performed on elements is unspecified
+     * and may be nondeterministic.
      *
      * @tparam A1 the result type of the binary operator, a supertype of `A`
      * @tparam Fn the type of the associative binary operator
@@ -600,7 +604,7 @@ public:
      *          the result an arbitrary number of times, and must not change
      *          the result (e.g., an empty list for list concatenation,
      *          0 for addition, or 1 for multiplication)
-     * @param op the associative binary operator
+     * @param op a binary operator that must be associative
      * @return the result of applying the fold operator `op` between all
      *         elements of this list and `z`, or `z` if this list is empty
      */
@@ -618,8 +622,8 @@ public:
     }
 
     /**
-     * Applies a binary operator to a start value and all elements of
-     * this list, going left to right.
+     * @brief Applies a binary operator to a start value and all elements of
+     *        this list, going left to right.
      *
      * @tparam B the result type of the binary operator
      * @tparam Fn the type of the binary operator
@@ -639,8 +643,8 @@ public:
     }
 
     /**
-     * Applies a binary operator to a start value and all elements of
-     * this list, going right to left.
+     * @brief Applies a binary operator to a start value and all elements of
+     *        this list, going right to left.
      *
      * @tparam B the result type of the binary operator
      * @tparam Fn the type of the binary operator
@@ -666,7 +670,8 @@ public:
     }
 
     /**
-     * Returns the sum of all elements of this list, or 0 if this list is empty.
+     * @brief Returns the sum of all elements of this list,
+     *        or 0 if this list is empty.
      *
      * @return the sum of all elements of this list, or 0 if this list is empty
      */
@@ -680,9 +685,11 @@ public:
     }
 
     /**
-     * Returns the product of all elements of this list, or 1 if this list is empty.
+     * @brief Returns the product of all elements of this list,
+     *        or 1 if this list is empty.
      *
-     * @return the product of all elements of this list, or 1 if this list is empty
+     * @return the product of all elements of this list,
+     *         or 1 if this list is empty
      */
     A product() const
     {
@@ -694,7 +701,54 @@ public:
     }
 
     /**
-     * Returns the element at the specified position of this list.
+     * @brief Returns a list consisting of elements of this list sorted in
+     *        ascending order, as determined by the `<` operator.
+     *
+     * The sort is stable. That is, equal elements appear in the same order
+     * in the sorted sequence as in the original.
+     *
+     * @return a list consisting of elements of this list sorted in
+     *         ascending order, as determined by the `<` operator
+     */
+    List sorted() const
+    {
+        return sorted([](const A &x, const A &y) { return x < y; });
+    }
+
+    /**
+     * @brief Returns a list consisting of elements of this list sorted in
+     *        ascending order, as determined by the given comparator.
+     *
+     * The sort is stable. That is, equal elements appear in the same order
+     * in the sorted sequence as in the original.
+     *
+     * @tparam Fn the type of the comparator
+     * @param lt a comparator that returns `true` if its first argument
+     *           is *less* than (i.e., is ordered *before*) the second
+     * @return a list consisting of elements of this list sorted in
+     *         ascending order, as determined by the given comparator
+     */
+    template<typename Fn>
+    List sorted(Fn lt) const
+    {
+        std::vector<Ptr<A>> buf;
+        buf.reserve(size());
+        foreachImpl([&buf](const Ptr<A> &x) {
+            buf.emplace_back(x);
+        });
+
+        std::stable_sort(
+                buf.begin(),
+                buf.end(),
+                [&lt](const Ptr<A> &x, const Ptr<A> &y) { return lt(*x, *y); });
+
+        return toList(
+                std::make_move_iterator(buf.rbegin()),
+                std::make_move_iterator(buf.rend()));
+    }
+
+    /**
+     * @brief Returns the element at the specified position of this list.
      *
      * @param index index of the element to return
      * @return the element at the specified position of this list
@@ -711,7 +765,7 @@ public:
     }
 
     /**
-     * Compares this list with the given list for equality.
+     * @brief Compares this list with the given list for equality.
      *
      * @param that the list to be compared for equality with this list
      * @return `true` if `that` contains the same elements as this list
@@ -736,7 +790,7 @@ public:
     }
 
     /**
-     * Compares this list with the given list for inequality.
+     * @brief Compares this list with the given list for inequality.
      *
      * @param that the list to be compared for inequality with this list
      * @return `true` if `that` does not contains the same elements as this list
