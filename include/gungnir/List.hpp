@@ -95,6 +95,13 @@ public:
         : List(std::move(head), List(std::forward<Args>(tail)...))
     {}
 
+    /**
+     * @brief Constructs a list with the contents of the range [`first`, `last`).
+     *
+     * @tparam InputIt the type of the iterators
+     * @param first the iterator pointing to the start of the range
+     * @param last the iterator pointing to the end of the range
+     */
     template<
         typename InputIt,
         typename = typename std::enable_if<std::is_convertible<
