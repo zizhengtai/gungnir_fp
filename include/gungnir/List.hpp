@@ -42,12 +42,6 @@ using namespace detail;
  */
 template<typename A>
 class List final {
-
-    class Node;
-
-    template<typename T>
-    using Ptr = std::shared_ptr<const T>;
-
 public:
     /**
      * @brief Constructs an empty list.
@@ -915,6 +909,9 @@ public:
 private:
     template<typename>
     friend class List;
+
+    template<typename T>
+    using Ptr = std::shared_ptr<const T>;
 
     class Node final {
         class Priv final {};
