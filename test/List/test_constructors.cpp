@@ -1,3 +1,4 @@
+#include <iterator>
 #include <memory>
 #include <stdexcept>
 
@@ -66,6 +67,53 @@ TEST_CASE("test List constructors", "[List][constructor]") {
             std::unique_ptr<int>(new int(2)),
             std::unique_ptr<int>(new int(1))
         );
+        REQUIRE_FALSE(ys.isEmpty());
+        REQUIRE(ys.size() == 5);
+        REQUIRE(ys.tail().size() == 4);
+        REQUIRE(ys.tail().tail().size() == 3);
+        REQUIRE(ys.tail().tail().tail().size() == 2);
+        REQUIRE(ys.tail().tail().tail().tail().size() == 1);
+        REQUIRE(ys.tail().tail().tail().tail().tail().size() == 0);
+        REQUIRE_THROWS_AS(
+            ys.tail().tail().tail().tail().tail().head(), std::out_of_range);
+        REQUIRE_THROWS_AS(
+            ys.tail().tail().tail().tail().tail().tail(), std::out_of_range);
+        REQUIRE(*ys[0] == 5);
+        REQUIRE(*ys[1] == 4);
+        REQUIRE(*ys[2] == 3);
+        REQUIRE(*ys[3] == 2);
+        REQUIRE(*ys[4] == 1);
+        REQUIRE_THROWS_AS(*ys[5], std::out_of_range);
+    }
+    SECTION("List from iterators") {
+        std::vector<int> v1{1, 2, 3, 4, 5};
+        List<int> xs(v1.cbegin(), v1.cend());
+        REQUIRE_FALSE(xs.isEmpty());
+        REQUIRE(xs.size() == 5);
+        REQUIRE(xs.tail().size() == 4);
+        REQUIRE(xs.tail().tail().size() == 3);
+        REQUIRE(xs.tail().tail().tail().size() == 2);
+        REQUIRE(xs.tail().tail().tail().tail().size() == 1);
+        REQUIRE(xs.tail().tail().tail().tail().tail().size() == 0);
+        REQUIRE_THROWS_AS(
+            xs.tail().tail().tail().tail().tail().head(), std::out_of_range);
+        REQUIRE_THROWS_AS(
+            xs.tail().tail().tail().tail().tail().tail(), std::out_of_range);
+        REQUIRE(xs[0] == 1);
+        REQUIRE(xs[1] == 2);
+        REQUIRE(xs[2] == 3);
+        REQUIRE(xs[3] == 4);
+        REQUIRE(xs[4] == 5);
+        REQUIRE_THROWS_AS(xs[5], std::out_of_range);
+
+        std::vector<std::unique_ptr<int>> v2;
+        v2.reserve(5);
+        for (int i: {5, 4, 3, 2, 1}) {
+            v2.emplace_back(std::unique_ptr<int>(new int(i)));
+        }
+        List<std::unique_ptr<int>> ys(
+                std::make_move_iterator(v2.begin()),
+                std::make_move_iterator(v2.end()));
         REQUIRE_FALSE(ys.isEmpty());
         REQUIRE(ys.size() == 5);
         REQUIRE(ys.tail().size() == 4);
