@@ -73,13 +73,6 @@ struct GenSeq<0, S...> {
 
 }  // namespace detail
 
-// Convenience identity function.
-template<typename T>
-auto identity(T &&x) -> decltype(std::forward<T>(x))
-{
-    return std::forward<T>(x);
-}
-
 }  // namespace gungnir
 
 #endif  // GUNGNIR_DETAIL_UTIL_HPP

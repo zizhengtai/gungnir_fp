@@ -416,7 +416,16 @@ public:
     template<typename A1 = A, typename B = typename HKT<A1>::L>
     List<B> flatten() const
     {
-        return flatMap(identity<const List<B> &>);
+        std::vector<Ptr<B>> buf;
+        foreachImpl([&buf](const Ptr<List<B>> &ys) {
+            ys->foreachImpl([&buf](const Ptr<B> &y) {
+                buf.emplace_back(y);
+            });
+        });
+
+        return List<B>::toList(
+                std::make_move_iterator(buf.rbegin()),
+                std::make_move_iterator(buf.rend()));
     }
 
     /**
