@@ -95,6 +95,25 @@ public:
         : List(std::move(head), List(std::forward<Args>(tail)...))
     {}
 
+    template<
+        typename InputIt,
+        typename = typename std::enable_if<std::is_convertible<
+            typename std::iterator_traits<InputIt>::value_type, A
+        >::value>::type
+    >
+    List(InputIt first, InputIt last) noexcept
+    {
+        std::vector<Ptr<A>> buf;
+        buf.reserve(std::distance(first, last));
+        for (; first != last; ++first) {
+            buf.emplace_back(std::make_shared<A>(*first));
+        }
+
+        *this = toList(
+                std::make_move_iterator(buf.rbegin()),
+                std::make_move_iterator(buf.rend()));
+    }
+
     /** @brief Default copy constructor. */
     List(const List &) = default;
 
@@ -930,10 +949,10 @@ private:
         }
     }
 
-    template<typename RevIter>
+    template<typename ReverseIt>
     static List toList(
-            RevIter rbegin,
-            RevIter rend,
+            ReverseIt rbegin,
+            ReverseIt rend,
             Ptr<Node> head = Node::create())
     {
         for (; rbegin != rend; ++rbegin) {
