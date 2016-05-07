@@ -623,7 +623,7 @@ public:
     }
 
     /**
-     * @brief Folds the elements of this list using the specified associative
+     * @brief Folds the elements of this list using the given associative
      *        binary operator.
      *
      * The order in which operations are performed on elements is unspecified
@@ -823,6 +823,33 @@ public:
         return List<AB>::toList(
                 std::make_move_iterator(buf.rbegin()),
                 std::make_move_iterator(buf.rend()));
+    }
+
+    /**
+     * @brief Returns a prefix scan over this list with the given start value
+     *        and associative binary operator.
+     *
+     * @tparam A1 the result type of the binary operator, a supertype of `A`
+     * @tparam Fn the type of the associative binary operator
+     * @param z a neutral element for the prefix scan; may be added to
+     *          the result an arbitrary number of times, and must not change
+     *          the result (e.g., an empty list for list concatenation,
+     *          0 for addition, or 1 for multiplication)
+     * @param op a binary operator that must be associative
+     * @return a prefix scan over this list with the given start value and
+     *         associative binary operator
+     */
+    template<
+        typename A1,
+        typename Fn,
+        typename = typename std::enable_if<
+            std::is_same<A1, A>::value ||
+            std::is_base_of<A1, A>::value
+        >::type
+    >
+    A1 scan(A1 z, Fn op) const
+    {
+        return scanLeft(std::move(z), std::move(op));
     }
 
     /**
