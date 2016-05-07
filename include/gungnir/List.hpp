@@ -926,7 +926,7 @@ public:
     }
 
     /**
-     * @brief Applies a binary operator to a all elements of this list,
+     * @brief Applies a binary operator to all elements of this list,
      *        going left to right.
      *
      * @tparam Fn the type of the binary operator
