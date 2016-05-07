@@ -661,8 +661,7 @@ public:
         typename A1,
         typename Fn,
         typename = typename std::enable_if<
-            std::is_same<A1, A>::value ||
-            std::is_base_of<A1, A>::value
+            std::is_same<A1, A>::value || std::is_base_of<A1, A>::value
         >::type
     >
     A1 fold(A1 z, Fn op) const
@@ -861,8 +860,7 @@ public:
         typename A1,
         typename Fn,
         typename = typename std::enable_if<
-            std::is_same<A1, A>::value ||
-            std::is_base_of<A1, A>::value
+            std::is_same<A1, A>::value || std::is_base_of<A1, A>::value
         >::type
     >
     List<A1> scan(A1 z, Fn op) const
@@ -925,6 +923,32 @@ public:
             hd = BN::create(std::move(ptr), std::move(hd));
         }
         return List<B>(std::move(hd));
+    }
+
+    /**
+     * @brief Applies a binary operator to a all elements of this list,
+     *        going left to right.
+     *
+     * @tparam Fn the type of the binary operator
+     * @tparam A1 the result type of the binary operator, a supertype of `A`
+     * @param op the binary operator
+     * @return the result of inserting `op` between consecutive elements of
+     *         this list, going left to right
+     * @throws std::out_of_range if this list is empty
+     */
+    template<
+        typename Fn,
+        typename A1 = Decay<Ret<Fn, A, A>>,
+        typename = typename std::enable_if<
+            std::is_same<A1, A>::value || std::is_base_of<A1, A>::value
+        >::type
+    >
+    A1 reduceLeft(Fn op) const
+    {
+        if (isEmpty()) {
+            throw std::out_of_range("reduceLeft on empty list");
+        }
+        return tail().foldLeft(A1(head()), std::move(op));
     }
 
     /**
