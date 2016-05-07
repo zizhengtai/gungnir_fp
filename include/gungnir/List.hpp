@@ -996,7 +996,12 @@ public:
     /** @brief Default move assignment operator. */
     StdIterator & operator=(StdIterator &&) = default;
 
-    /** @brief Equal-to operator. */
+    /**
+     * @brief Tests whether two iterators point to the same element.
+     *
+     * @return `true` if this iterator and `that` point to the same element,
+     *         `false` otherwise
+     */
     bool operator==(const StdIterator &that) const
     {
         bool isEnd = !node_ || !(*node_)->head;
@@ -1005,20 +1010,33 @@ public:
                (!isEnd && !thatIsEnd && (*node_)->head == (*that.node_)->head);
     }
 
-    /** @brief Unequal-to operator. */
+    /**
+     * @brief Tests whether two iterators point to different element.
+     *
+     * @return `true` if this iterator and `that` point to different elements,
+     *         `false` otherwise
+     */
     bool operator!=(const StdIterator &that) const
     {
         return !(*this == that);
     }
 
-    /** @brief Pre-increment operator. */
+    /**
+     * @brief Increments this iterator and returns a reference to it.
+     *
+     * @return a reference to this iterator
+     */
     StdIterator & operator++()
     {
         node_ = &(*node_)->tail;
         return *this;
     }
 
-    /** @brief Post-increment operator. */
+    /**
+     * @brief Increments this iterator and returns a copy of the original iterator.
+     *
+     * @return a copy of the original iterator
+     */
     StdIterator operator++(int)
     {
         StdIterator it = *this;
@@ -1026,10 +1044,18 @@ public:
         return it;
     }
 
-    /** @brief Dereference operator. */
+    /**
+     * @brief Returns a reference to the element this iterator points to.
+     *
+     * @return a reference to the element this iterator points to
+     */
     const A & operator*() const { return *(*node_)->head; }
 
-    /** @brief Member-of operator. */
+    /**
+     * @brief Returns a pointer to the element this iterator points to.
+     *
+     * @return a pointer to the element this iterator points to
+     */
     const A * operator->() const { return (*node_)->head; }
 
 private:
