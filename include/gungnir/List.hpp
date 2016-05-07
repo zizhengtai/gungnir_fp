@@ -1052,7 +1052,7 @@ public:
      */
     StdIterator begin() const
     {
-        return StdIterator(&node_);
+        return StdIterator(node_.get());
     }
 
     /**
@@ -1068,7 +1068,7 @@ public:
     StdIterator end() const
     {
         static const auto nil = Node::create();
-        return StdIterator(&nil);
+        return StdIterator(nil.get());
     }
 
 private:
@@ -1141,7 +1141,7 @@ public:
      */
     bool operator==(const StdIterator &that) const
     {
-        return (*node_)->head == (*that.node_)->head;
+        return node_->head == that.node_->head;
     }
 
     /**
@@ -1152,7 +1152,7 @@ public:
      */
     bool operator!=(const StdIterator &that) const
     {
-        return (*node_)->head != (*that.node_)->head;
+        return node_->head != that.node_->head;
     }
 
     /**
@@ -1162,7 +1162,7 @@ public:
      */
     StdIterator & operator++()
     {
-        node_ = &(*node_)->tail;
+        node_ = node_->tail.get();
         return *this;
     }
 
@@ -1174,7 +1174,7 @@ public:
     StdIterator operator++(int)
     {
         StdIterator it = *this;
-        node_ = &(*node_)->tail;
+        node_ = node_->tail.get();
         return it;
     }
 
@@ -1185,7 +1185,7 @@ public:
      */
     const A & operator*() const
     {
-        return *(*node_)->head;
+        return *node_->head;
     }
 
     /**
@@ -1195,15 +1195,15 @@ public:
      */
     const A * operator->() const
     {
-        return (*node_)->head;
+        return node_->head.get();
     }
 
 private:
     friend class List;
 
-    explicit StdIterator(const Ptr<Node> *node) noexcept : node_(node) {}
+    explicit StdIterator(const Node *node) noexcept : node_(node) {}
 
-    const Ptr<Node> *node_;
+    const Node *node_;
 };
 
 /// @cond GUNGNIR_PRIVATE
