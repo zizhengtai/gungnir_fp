@@ -904,9 +904,7 @@ public:
         auto hd = BN::create(std::make_shared<B>(std::move(z)), BN::create());
         for (auto it = buf.crbegin(); it != buf.crend(); ++it) {
             auto ptr = std::make_shared<B>(op(**it, *hd->head));
-            hd = BN::create(
-                    std::move(ptr),
-                    std::move(hd));
+            hd = BN::create(std::move(ptr), std::move(hd));
         }
         return List<B>(std::move(hd));
     }
