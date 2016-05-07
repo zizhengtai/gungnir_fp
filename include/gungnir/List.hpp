@@ -952,6 +952,43 @@ public:
     }
 
     /**
+     * @brief Applies a binary operator to all elements of this list,
+     *        going right to left.
+     *
+     * @tparam Fn the type of the binary operator
+     * @tparam A1 the result type of the binary operator, a supertype of `A`
+     * @param op the binary operator
+     * @return the result of inserting `op` between consecutive elements of
+     *         this list, going right to left
+     * @throws std::out_of_range if this list is empty
+     */
+    template<
+        typename Fn,
+        typename A1 = Decay<Ret<Fn, A, A>>,
+        typename = typename std::enable_if<
+            std::is_same<A1, A>::value || std::is_base_of<A1, A>::value
+        >::type
+    >
+    A1 reduceRight(Fn op) const
+    {
+        if (isEmpty()) {
+            throw std::out_of_range("reduceRight on empty list");
+        }
+
+        std::vector<const A *> buf;
+        buf.reserve(size());
+        foreachImpl([&buf] (const Ptr<A> &x) {
+            buf.emplace_back(x.get());
+        });
+
+        A1 acc = *buf.back();
+        for (auto it = ++buf.crbegin(); it != buf.crend(); ++it) {
+            acc = op(**it, std::move(acc));
+        }
+        return acc;
+    }
+
+    /**
      * @brief Returns the element at the specified position of this list.
      *
      * @param index index of the element to return
