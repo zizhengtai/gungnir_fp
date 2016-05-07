@@ -34,7 +34,7 @@ namespace gungnir {
 using namespace detail;
 
 /**
- * An immutable linked list.
+ * @brief An immutable linked list.
  *
  * @author Zizheng Tai
  * @since 1.0
@@ -906,6 +906,35 @@ public:
         return !(*this == that);
     }
 
+    class StdIterator;
+
+    /**
+     * @brief Returns an iterator to the first element of this list.
+     *
+     * If this list is empty, the returned iterator will be equal to `end()`.
+     *
+     * @return an iterator to the first element of this list.
+     */
+    StdIterator begin() const
+    {
+        return StdIterator(&node_);
+    }
+
+    /**
+     * @brief Returns an iterator to the element following the last element
+     *        of this list.
+     *
+     * This element acts as a placeholder; attempting to access it results in
+     * undefined behavior.
+     *
+     * @return an iterator to the element following the last element
+     *         of this list
+     */
+    StdIterator end() const
+    {
+        return StdIterator();
+    }
+
 private:
     template<typename>
     friend class List;
@@ -913,34 +942,7 @@ private:
     template<typename T>
     using Ptr = std::shared_ptr<const T>;
 
-    class Node final {
-        class Priv final {};
-
-    public:
-        static Ptr<Node> create()
-        {
-            return std::make_shared<const Node>(Priv());
-        }
-
-        static Ptr<Node> create(Ptr<A> head, Ptr<Node> tail)
-        {
-            return std::make_shared<const Node>(
-                    Priv(), std::move(head), std::move(tail));
-        }
-
-        Node(Priv) noexcept : size(0)
-        {}
-
-        Node(Priv, Ptr<A> head, Ptr<Node> tail) noexcept
-            : size(1 + tail->size)
-            , head(std::move(head))
-            , tail(std::move(tail))
-        {}
-
-        const std::size_t size;
-        const Ptr<A> head;
-        const Ptr<Node> tail;
-    };
+    class Node;
 
     explicit List(Ptr<Node> node) noexcept : node_(std::move(node))
     {}
@@ -967,6 +969,128 @@ private:
 
     Ptr<Node> node_;
 };
+
+/**
+ * @brief A `ForwardIterator` for a `List`.
+ *
+ * @author Zizheng Tai
+ * @since 1.0
+ * @tparam A the element type of the list
+ */
+template<typename A>
+class List<A>::StdIterator final {
+public:
+    /** @brief Difference type. */
+    using difference_type = std::ptrdiff_t;
+
+    /** @brief Value type. */
+    using value_type = A;
+
+    /** @brief Reference type. */
+    using reference = const A &;
+
+    /** @brief Pointer type. */
+    using pointer = const A *;
+
+    /** @brief Iterator tag. */
+    using iterator_tag = std::forward_iterator_tag;
+
+    /** @brief Default copy constructor. */
+    StdIterator(const StdIterator &) = default;
+
+    /** @brief Default move constructor. */
+    StdIterator(StdIterator &) = default;
+
+    /** @brief Default copy assignment operator. */
+    StdIterator & operator=(const StdIterator &) = default;
+
+    /** @brief Default move assignment operator. */
+    StdIterator & operator=(StdIterator &&) = default;
+
+    /** @brief Equal-to operator. */
+    bool operator==(const StdIterator &that) const
+    {
+        bool isEnd = !node_ || !(*node_)->head;
+        bool thatIsEnd = !that.node_ || !(*that.node_)->head;
+        return
+            (isEnd && thatIsEnd) ||
+            (!isEnd && !thatIsEnd && (*node_)->head == (*that.node_)->head);
+    }
+
+    /** @brief Unequal-to operator. */
+    bool operator!=(const StdIterator &that) const
+    {
+        return !(*this == that);
+    }
+
+    /** @brief Pre-increment operator. */
+    StdIterator & operator++()
+    {
+        node_ = &(*node_)->tail;
+        return *this;
+    }
+
+    /** @brief Post-increment operator. */
+    StdIterator operator++(int)
+    {
+        StdIterator it = *this;
+        node_ = &(*node_)->tail;
+        return it;
+    }
+
+    /** @brief Dereference operator. */
+    reference operator*() const { return *(*node_)->head; }
+
+    /** @brief Member-of operator. */
+    pointer operator->() const { return (*node_)->head; }
+
+private:
+    friend class List;
+
+    explicit StdIterator(const Ptr<Node> *node = nullptr) noexcept
+        : node_(node)
+    {}
+
+    const Ptr<Node> *node_;
+};
+
+/// @cond GUNGNIR_PRIVATE
+template<typename A>
+class List<A>::Node final {
+    class Priv final {};
+
+public:
+    static Ptr<Node> create()
+    {
+        return std::make_shared<const Node>(Priv());
+    }
+
+    static Ptr<Node> create(Ptr<A> head, Ptr<Node> tail)
+    {
+        return std::make_shared<const Node>(
+                Priv(), std::move(head), std::move(tail));
+    }
+
+    Node(Priv) noexcept : size(0)
+    {}
+
+    Node(Priv, Ptr<A> head, Ptr<Node> tail) noexcept
+        : size(1 + tail->size)
+        , head(std::move(head))
+        , tail(std::move(tail))
+    {}
+
+    Node(const Node &) = delete;
+    Node(Node &&) = delete;
+
+    Node & operator=(const Node &) = delete;
+    Node & operator=(Node &&) = delete;
+
+    const std::size_t size;
+    const Ptr<A> head;
+    const Ptr<Node> tail;
+};
+/// @endcond
 
 }  // namespace gungnir
 
