@@ -31,7 +31,7 @@ TEST_CASE("test List foldLeft", "[List][foldLeft]") {
     SECTION("empty List") {
         List<int> xs;
         REQUIRE_NOTHROW(xs.foldLeft(123, throwOp<int, int, int>));
-        REQUIRE(xs.foldLeft(123, throwOp<int, int, int>));
+        REQUIRE(xs.foldLeft(123, throwOp<int, int, int>) == 123);
 
         List<PI> ys;
         REQUIRE_NOTHROW(ys.foldLeft(PI(new int(456)), throwOp<PI, PI, PIRef>));

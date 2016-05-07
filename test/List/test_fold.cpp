@@ -28,7 +28,7 @@ TEST_CASE("test List fold", "[List][fold]") {
     SECTION("empty List") {
         List<int> xs;
         REQUIRE_NOTHROW(xs.fold(123, throwOp<int, int, int>));
-        REQUIRE(xs.fold(123, throwOp<int, int, int>));
+        REQUIRE(xs.fold(123, throwOp<int, int, int>) == 123);
 
         List<PI> ys;
         REQUIRE_NOTHROW(ys.fold(PI(new int(456)), throwOp<PI, PIRef, PIRef>));

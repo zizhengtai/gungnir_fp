@@ -847,7 +847,7 @@ public:
             std::is_base_of<A1, A>::value
         >::type
     >
-    A1 scan(A1 z, Fn op) const
+    List<A1> scan(A1 z, Fn op) const
     {
         return scanLeft(std::move(z), std::move(op));
     }
