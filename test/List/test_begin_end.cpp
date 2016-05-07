@@ -48,17 +48,27 @@ TEST_CASE("test List begin and end", "[List][begin][end]") {
     SECTION("List with multiple elements") {
         List<int> xs(1, 2, 3, 4, 5);
         REQUIRE(std::distance(xs.begin(), xs.end()) == 5);
-        std::vector<int> v1{1, 2, 3, 4, 5}, v2(xs.begin(), xs.end());
+        std::vector<int> v1{1, 2, 3, 4, 5}, v2(xs.begin(), xs.end()), v3;
+        v3.reserve(5);
+        for (const auto &x: xs) {
+            v3.emplace_back(x);
+        }
         REQUIRE(v1 == v2);
+        REQUIRE(v1 == v3);
 
         List<PI> ys = xs.map([](int x) { return PI(new int(6 - x)); });
         REQUIRE(std::distance(ys.begin(), ys.end()) == 5);
-        std::vector<int *> v3, v4;
-        v3.reserve(5);
+        std::vector<int *> v4, v5, v6;
         v4.reserve(5);
-        ys.foreach([&v3](const PI &p) { v3.emplace_back(p.get()); });
-        std::transform(ys.begin(), ys.end(), std::back_inserter(v4),
+        v5.reserve(5);
+        v6.reserve(5);
+        ys.foreach([&v4](const PI &p) { v4.emplace_back(p.get()); });
+        std::transform(ys.begin(), ys.end(), std::back_inserter(v5),
                        [](const PI &p) { return p.get(); });
-        REQUIRE(v3 == v4);
+        for (const auto &p: ys) {
+            v6.emplace_back(p.get());
+        }
+        REQUIRE(v4 == v5);
+        REQUIRE(v4 == v6);
     }
 }
