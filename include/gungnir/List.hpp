@@ -979,7 +979,8 @@ private:
  */
 template<typename A>
 class List<A>::StdIterator final
-    : public std::iterator<std::forward_iterator_tag, A,
+    : public std::iterator<std::forward_iterator_tag,
+                           A,
                            std::ptrdiff_t,
                            const A *,
                            const A &> {
