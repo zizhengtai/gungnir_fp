@@ -16,6 +16,7 @@ add_executable(test_all
   List/test_foreach.cpp
   List/test_map.cpp
   List/test_filter.cpp
+  List/test_filter_not.cpp
   List/test_reverse.cpp
   List/test_take.cpp
   List/test_take_right.cpp
