@@ -1080,10 +1080,9 @@ public:
      */
     bool operator==(const StdIterator &that) const
     {
-        bool isEnd = !node_ || !(*node_)->head;
-        bool thatIsEnd = !that.node_ || !(*that.node_)->head;
-        return (isEnd && thatIsEnd) ||
-               (!isEnd && !thatIsEnd && (*node_)->head == (*that.node_)->head);
+        bool isEnd = !(node_ && (*node_)->head);
+        return (isEnd == !(that.node_ && (*that.node_)->head)) &&
+               (isEnd || (*node_)->head == (*that.node_)->head);
     }
 
     /**
