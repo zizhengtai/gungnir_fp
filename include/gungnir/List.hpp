@@ -46,8 +46,7 @@ public:
     /**
      * @brief Constructs an empty list.
      */
-    List() noexcept : node_(Node::create())
-    {}
+    List() noexcept : node_(Node::create()) {}
 
     /**
      * @brief Constructs a list with the given element.
@@ -1068,7 +1067,8 @@ public:
      */
     StdIterator end() const
     {
-        return StdIterator();
+        static const auto nil = Node::create();
+        return StdIterator(&nil);
     }
 
 private:
@@ -1141,9 +1141,7 @@ public:
      */
     bool operator==(const StdIterator &that) const
     {
-        bool isEnd = !(node_ && (*node_)->head);
-        return (isEnd == !(that.node_ && (*that.node_)->head)) &&
-               (isEnd || (*node_)->head == (*that.node_)->head);
+        return (*node_)->head == (*that.node_)->head;
     }
 
     /**
@@ -1154,7 +1152,7 @@ public:
      */
     bool operator!=(const StdIterator &that) const
     {
-        return !(*this == that);
+        return (*node_)->head != (*that.node_)->head;
     }
 
     /**
@@ -1185,21 +1183,25 @@ public:
      *
      * @return a reference to the element this iterator points to
      */
-    const A & operator*() const { return *(*node_)->head; }
+    const A & operator*() const
+    {
+        return *(*node_)->head;
+    }
 
     /**
      * @brief Returns a pointer to the element this iterator points to.
      *
      * @return a pointer to the element this iterator points to
      */
-    const A * operator->() const { return (*node_)->head; }
+    const A * operator->() const
+    {
+        return (*node_)->head;
+    }
 
 private:
     friend class List;
 
-    explicit StdIterator(const Ptr<Node> *node = nullptr) noexcept
-        : node_(node)
-    {}
+    explicit StdIterator(const Ptr<Node> *node) noexcept : node_(node) {}
 
     const Ptr<Node> *node_;
 };
@@ -1221,8 +1223,7 @@ public:
                 Priv(), std::move(head), std::move(tail));
     }
 
-    Node(Priv) noexcept : size(0)
-    {}
+    Node(Priv) noexcept : size(0) {}
 
     Node(Priv, Ptr<A> head, Ptr<Node> tail) noexcept
         : size(1 + tail->size)
