@@ -840,16 +840,35 @@ public:
     template<typename B, typename Fn>
     List<B> scanLeft(B z, Fn op) const
     {
-        std::vector<Ptr<B>> buf;
-        buf.reserve(size() + 1);
-        buf.emplace_back(std::make_shared<B>(std::move(z)));
-        foreachImpl([&buf, &op] (const Ptr<A> &x) {
-            buf.emplace_back(std::make_shared<B>(op(*buf.back(), *x)));
+        std::vector<Ptr<B>> acc;
+        acc.reserve(size() + 1);
+        acc.emplace_back(std::make_shared<B>(std::move(z)));
+        foreachImpl([&acc, &op] (const Ptr<A> &x) {
+            acc.emplace_back(std::make_shared<B>(op(*acc.back(), *x)));
         });
 
         return List<B>::toList(
-                std::make_move_iterator(buf.rbegin()),
-                std::make_move_iterator(buf.rend()));
+                std::make_move_iterator(acc.rbegin()),
+                std::make_move_iterator(acc.rend()));
+    }
+
+    template<typename B, typename Fn>
+    List<B> scanRight(B z, Fn op) const
+    {
+        std::vector<const A *> buf;
+        buf.reserve(size());
+        foreachImpl([&buf](const Ptr<A> &x) {
+            buf.emplace_back(x.get());
+        });
+
+        using BN = typename List<B>::Node;
+        auto hd = BN::create(std::make_shared<B>(std::move(z)), BN::create());
+        for (auto it = buf.crbegin(); it != buf.crend(); ++it) {
+            hd = BN::create(
+                    std::make_shared<B>(op(**it, *hd->head)),
+                    std::move(hd));
+        }
+        return List<B>(std::move(hd));
     }
 
     /**
