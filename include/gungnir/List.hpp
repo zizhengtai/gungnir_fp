@@ -978,23 +978,12 @@ private:
  * @tparam A the element type of the list
  */
 template<typename A>
-class List<A>::StdIterator final {
+class List<A>::StdIterator final
+    : public std::iterator<std::forward_iterator_tag, A,
+                           std::ptrdiff_t,
+                           const A *,
+                           const A &> {
 public:
-    /** @brief Difference type. */
-    using difference_type = std::ptrdiff_t;
-
-    /** @brief Value type. */
-    using value_type = A;
-
-    /** @brief Reference type. */
-    using reference = const A &;
-
-    /** @brief Pointer type. */
-    using pointer = const A *;
-
-    /** @brief Iterator tag. */
-    using iterator_tag = std::forward_iterator_tag;
-
     /** @brief Default copy constructor. */
     StdIterator(const StdIterator &) = default;
 
@@ -1012,9 +1001,8 @@ public:
     {
         bool isEnd = !node_ || !(*node_)->head;
         bool thatIsEnd = !that.node_ || !(*that.node_)->head;
-        return
-            (isEnd && thatIsEnd) ||
-            (!isEnd && !thatIsEnd && (*node_)->head == (*that.node_)->head);
+        return (isEnd && thatIsEnd) ||
+               (!isEnd && !thatIsEnd && (*node_)->head == (*that.node_)->head);
     }
 
     /** @brief Unequal-to operator. */
@@ -1039,10 +1027,10 @@ public:
     }
 
     /** @brief Dereference operator. */
-    reference operator*() const { return *(*node_)->head; }
+    const A & operator*() const { return *(*node_)->head; }
 
     /** @brief Member-of operator. */
-    pointer operator->() const { return (*node_)->head; }
+    const A * operator->() const { return (*node_)->head; }
 
 private:
     friend class List;
