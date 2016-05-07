@@ -244,10 +244,12 @@ public:
     /**
      * @brief Returns all elements of this list that satisfy a predicate.
      *
+     * The order of the elements is preserved.
+     *
      * @tparam Fn type of the predicate
      * @param p the predicate used to test elements
      * @return a new list consisting of all elements of this list that satisfy
-     *         the given predicate `p`. The order of the elements is preserved.
+     *         the given predicate `p`
      */
     template<typename Fn>
     List filter(Fn p) const
@@ -267,10 +269,12 @@ public:
     /**
      * @brief Returns all elements of this list that violate a predicate.
      *
+     * The order of the elements is preserved.
+     *
      * @tparam Fn type of the predicate
      * @param p the predicate used to test elements
      * @return a new list consisting of all elements of this list that violate
-     *         the given predicate `p`. The order of the elements is preserved.
+     *         the given predicate `p`
      */
     template<typename Fn>
     List filterNot(Fn p) const
