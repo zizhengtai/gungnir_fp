@@ -265,6 +265,20 @@ public:
     }
 
     /**
+     * @brief Returns all elements of this list that violate a predicate.
+     *
+     * @tparam Fn type of the predicate
+     * @param p the predicate used to test elements
+     * @return a new list consisting of all elements of this list that violate
+     *         the given predicate `p`. The order of the elements is preserved.
+     */
+    template<typename Fn>
+    List filterNot(Fn p) const
+    {
+        return filter([&p](const A &x) { return !p(x); });
+    }
+
+    /**
      * @brief Returns a new list with elements of this list in reversed order.
      *
      * @return a new list with elements of this list in reversed order
