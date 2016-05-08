@@ -925,6 +925,34 @@ public:
     }
 
     /**
+     * @brief Applies the given associative binary operator to all elements of
+     *        this list.
+     *
+     * The order in which operations are performed on elements is unspecified
+     * and may be nondeterministic.
+     *
+     * @tparam A1 the result type of the binary operator, a supertype of `A`
+     * @tparam Fn the type of the associative binary operator
+     * @param op a binary operator that must be associative
+     * @return the result of inserting `op` between all elements of this list
+     * @throws std::out_of_range if this list is empty
+     */
+    template<
+        typename Fn,
+        typename A1 = Decay<Ret<Fn, A, A>>,
+        typename = typename std::enable_if<
+            std::is_same<A1, A>::value || std::is_base_of<A1, A>::value
+        >::type
+    >
+    A1 reduce(Fn op) const
+    {
+        if (isEmpty()) {
+            throw std::out_of_range("reduce on empty list");
+        }
+        return reduceLeft(std::move(op));
+    }
+
+    /**
      * @brief Applies a binary operator to all elements of this list,
      *        going left to right.
      *
