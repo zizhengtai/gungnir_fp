@@ -133,7 +133,7 @@ public:
      */
     bool isEmpty() const
     {
-        return node_->size == 0;
+        return !node_->head;
     }
 
     /**
@@ -172,6 +172,20 @@ public:
             throw std::out_of_range("tail of empty list");
         }
         return List(node_->tail);
+    }
+
+    /**
+     * @brief Returns a pair consisting of the head and tail of this list.
+     *
+     * @return a pair consisting of the head and tail of this list
+     * @throws std::out_of_range if this list is empty
+     */
+    std::pair<std::reference_wrapper<const A>, List> uncons() const
+    {
+        if (isEmpty()) {
+            throw std::out_of_range("uncons on empty list");
+        }
+        return std::make_pair(std::cref(head()), tail());
     }
 
     /**
@@ -342,7 +356,7 @@ public:
     {
         std::vector<Ptr<A>> buf;
         for (auto n = node_.get();
-                n->size > 0 && p(*(n->head));
+                n->head && p(*(n->head));
                 n = n->tail.get()) {
             buf.emplace_back(n->head);
         }
@@ -394,7 +408,7 @@ public:
     List dropWhile(Fn p) const
     {
         auto pn = &node_;
-        for (; (*pn)->size > 0 && p(*((*pn)->head)); pn = &(*pn)->tail) {}
+        for (; (*pn)->head && p(*((*pn)->head)); pn = &(*pn)->tail) {}
         return List(*pn);
     }
 
@@ -477,7 +491,7 @@ public:
     template<typename Fn>
     bool exists(Fn p) const
     {
-        for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
+        for (auto n = node_.get(); n->head; n = n->tail.get()) {
             if (p(*(n->head))) {
                 return true;
             }
@@ -497,7 +511,7 @@ public:
     template<typename Fn>
     bool forall(Fn p) const
     {
-        for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
+        for (auto n = node_.get(); n->head; n = n->tail.get()) {
             if (!p(*(n->head))) {
                 return false;
             }
@@ -515,7 +529,7 @@ public:
      */
     bool contains(const A &x) const
     {
-        for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
+        for (auto n = node_.get(); n->head; n = n->tail.get()) {
             if (*(n->head) == x) {
                 return true;
             }
@@ -1048,7 +1062,7 @@ public:
             return false;
         }
         for (auto n1 = node_.get(), n2 = that.node_.get();
-                n1->size != 0;
+                n1->head;
                 n1 = n1->tail.get(), n2 = n2->tail.get()) {
             if (*(n1->head) != *(n2->head)) {
                 return false;
@@ -1114,7 +1128,7 @@ private:
     template<typename Fn>
     void foreachImpl(Fn f) const
     {
-        for (auto n = node_.get(); n->size > 0; n = n->tail.get()) {
+        for (auto n = node_.get(); n->head; n = n->tail.get()) {
             f(n->head);
         }
     }
