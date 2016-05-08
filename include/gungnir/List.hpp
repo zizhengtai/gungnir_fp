@@ -46,7 +46,7 @@ public:
     /**
      * @brief Constructs an empty list.
      */
-    List() noexcept : node_(Node::create()) {}
+    List() noexcept : size_(0), node_(Node::create()) {}
 
     /**
      * @brief Constructs a list with the given element.
@@ -54,7 +54,8 @@ public:
      * @param x the only element of this list
      */
     explicit List(A x) noexcept
-        : node_(Node::create(
+        : size_(1)
+        , node_(Node::create(
                     std::make_shared<const A>(std::move(x)),
                     Node::create()))
     {}
@@ -66,7 +67,8 @@ public:
      * @param tail all elements of this list except the first one
      */
     List(A head, List tail) noexcept
-        : node_(Node::create(
+        : size_(tail.size_ + 1)
+        , node_(Node::create(
                     std::make_shared<const A>(std::move(head)),
                     std::move(tail.node_)))
     {}
@@ -102,17 +104,19 @@ public:
         >::value>::type
     >
     List(InputIt first, InputIt last) noexcept
-    {
-        std::vector<Ptr<A>> buf;
-        buf.reserve(std::distance(first, last));
-        for (; first != last; ++first) {
-            buf.emplace_back(std::make_shared<A>(*first));
-        }
+        : List([&first, &last] {
+            std::vector<Ptr<A>> buf;
+            buf.reserve(std::distance(first, last));
+            for (; first != last; ++first) {
+                buf.emplace_back(std::make_shared<A>(*first));
+            }
 
-        *this = toList(
-                std::make_move_iterator(buf.rbegin()),
-                std::make_move_iterator(buf.rend()));
-    }
+            return toList(
+                    buf.size(),
+                    std::make_move_iterator(buf.rbegin()),
+                    std::make_move_iterator(buf.rend()));
+        }())
+    {}
 
     /** @brief Default copy constructor. */
     List(const List &) = default;
@@ -143,7 +147,7 @@ public:
      */
     std::size_t size() const
     {
-        return node_->size;
+        return size_;
     }
 
     /**
@@ -171,7 +175,7 @@ public:
         if (isEmpty()) {
             throw std::out_of_range("tail of empty list");
         }
-        return List(node_->tail);
+        return List(size() - 1, node_->tail);
     }
 
     /**
@@ -250,6 +254,7 @@ public:
         });
 
         return List<B>::toList(
+                size(),
                 std::make_move_iterator(buf.rbegin()),
                 std::make_move_iterator(buf.rend()));
     }
@@ -275,6 +280,7 @@ public:
         });
 
         return toList(
+                buf.size(),
                 std::make_move_iterator(buf.rbegin()),
                 std::make_move_iterator(buf.rend()));
     }
@@ -306,7 +312,7 @@ public:
         foreachImpl([&hd](const Ptr<A> &x) {
             hd = Node::create(x, std::move(hd));
         });
-        return List(std::move(hd));
+        return List(size(), std::move(hd));
     }
 
     /**
@@ -326,6 +332,7 @@ public:
         }
 
         return toList(
+                buf.size(),
                 std::make_move_iterator(buf.rbegin()),
                 std::make_move_iterator(buf.rend()));
     }
@@ -362,6 +369,7 @@ public:
         }
 
         return toList(
+                buf.size(),
                 std::make_move_iterator(buf.rbegin()),
                 std::make_move_iterator(buf.rend()));
     }
@@ -379,8 +387,8 @@ public:
             return List();
         }
         auto pn = &node_;
-        for (; n > 0; pn = &(*pn)->tail, --n) {}
-        return List(*pn);
+        for (std::size_t i = 0; i < n; pn = &(*pn)->tail, ++i) {}
+        return List(size() - n, *pn);
     }
 
     /**
@@ -407,9 +415,10 @@ public:
     template<typename Fn>
     List dropWhile(Fn p) const
     {
+        auto s = size();
         auto pn = &node_;
-        for (; (*pn)->head && p(*((*pn)->head)); pn = &(*pn)->tail) {}
-        return List(*pn);
+        for (; (*pn)->head && p(*((*pn)->head)); --s, pn = &(*pn)->tail) {}
+        return List(s, *pn);
     }
 
     /**
@@ -452,6 +461,7 @@ public:
         });
 
         return List<B>::toList(
+                buf.size(),
                 std::make_move_iterator(buf.rbegin()),
                 std::make_move_iterator(buf.rend()));
     }
@@ -475,6 +485,7 @@ public:
         });
 
         return List<B>::toList(
+                buf.size(),
                 std::make_move_iterator(buf.rbegin()),
                 std::make_move_iterator(buf.rend()));
     }
@@ -589,9 +600,11 @@ public:
     template<typename... Args>
     List prepend(Args&&... args) const
     {
-        return List(Node::create(
-                std::make_shared<A>(std::forward<Args>(args)...),
-                node_));
+        return List(
+                size() + 1,
+                Node::create(
+                    std::make_shared<A>(std::forward<Args>(args)...),
+                    node_));
     }
 
     /**
@@ -616,6 +629,7 @@ public:
         });
 
         return toList(
+                size() + that.size(),
                 std::make_move_iterator(buf.rbegin()),
                 std::make_move_iterator(buf.rend()),
                 that.node_);
@@ -646,6 +660,7 @@ public:
         }
 
         return toList(
+                size(),
                 std::make_move_iterator(buf.rbegin()),
                 std::make_move_iterator(buf.rend()),
                 Node::create(
@@ -804,6 +819,7 @@ public:
                 [&lt](const Ptr<A> &x, const Ptr<A> &y) { return lt(*x, *y); });
 
         return toList(
+                size(),
                 std::make_move_iterator(buf.rbegin()),
                 std::make_move_iterator(buf.rend()));
     }
@@ -851,6 +867,7 @@ public:
         }
 
         return List<AB>::toList(
+                buf.size(),
                 std::make_move_iterator(buf.rbegin()),
                 std::make_move_iterator(buf.rend()));
     }
@@ -904,6 +921,7 @@ public:
         });
 
         return List<B>::toList(
+                size() + 1,
                 std::make_move_iterator(acc.rbegin()),
                 std::make_move_iterator(acc.rend()));
     }
@@ -935,7 +953,7 @@ public:
             auto ptr = std::make_shared<B>(op(**it, *hd->head));
             hd = BN::create(std::move(ptr), std::move(hd));
         }
-        return List<B>(std::move(hd));
+        return List<B>(size() + 1, std::move(hd));
     }
 
     /**
@@ -1122,7 +1140,9 @@ private:
 
     class Node;
 
-    explicit List(Ptr<Node> node) noexcept : node_(std::move(node))
+    List(std::size_t size, Ptr<Node> node) noexcept
+        : size_(size)
+        , node_(std::move(node))
     {}
 
     template<typename Fn>
@@ -1135,6 +1155,7 @@ private:
 
     template<typename ReverseIt>
     static List toList(
+            std::size_t size,
             ReverseIt rbegin,
             ReverseIt rend,
             Ptr<Node> head = Node::create())
@@ -1142,9 +1163,10 @@ private:
         for (; rbegin != rend; ++rbegin) {
             head = Node::create(*rbegin, std::move(head));
         }
-        return List(std::move(head));
+        return List(size, std::move(head));
     }
 
+    std::size_t size_;
     Ptr<Node> node_;
 };
 
@@ -1265,11 +1287,10 @@ public:
                 Priv(), std::move(head), std::move(tail));
     }
 
-    Node(Priv) noexcept : size(0) {}
+    Node(Priv) noexcept {}
 
     Node(Priv, Ptr<A> head, Ptr<Node> tail) noexcept
-        : size(1 + tail->size)
-        , head(std::move(head))
+        : head(std::move(head))
         , tail(std::move(tail))
     {}
 
@@ -1279,7 +1300,6 @@ public:
     Node & operator=(const Node &) = delete;
     Node & operator=(Node &&) = delete;
 
-    const std::size_t size;
     const Ptr<A> head;
     const Ptr<Node> tail;
 };
