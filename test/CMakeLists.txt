@@ -45,6 +45,7 @@ add_executable(test_all
   List/test_scan.cpp
   List/test_scan_left.cpp
   List/test_scan_right.cpp
+  List/test_reduce.cpp
   List/test_reduce_left.cpp
   List/test_reduce_right.cpp
   List/test_begin_end.cpp
