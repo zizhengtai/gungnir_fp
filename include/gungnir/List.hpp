@@ -137,7 +137,7 @@ public:
      */
     bool isEmpty() const
     {
-        return !node_->head;
+        return size_ == 0;
     }
 
     /**
