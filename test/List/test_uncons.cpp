@@ -14,9 +14,13 @@ TEST_CASE("test List uncons", "[List][uncons]") {
     SECTION("empty List") {
         List<int> xs;
         REQUIRE_THROWS_AS(xs.uncons(), std::out_of_range);
+        REQUIRE(xs.isEmpty());
+        REQUIRE(xs.size() == 0);
 
         List<PI> ys;
         REQUIRE_THROWS_AS(ys.uncons(), std::out_of_range);
+        REQUIRE(ys.isEmpty());
+        REQUIRE(ys.size() == 0);
     }
     SECTION("List with one element") {
         List<int> xs1(123);
@@ -28,6 +32,8 @@ TEST_CASE("test List uncons", "[List][uncons]") {
         REQUIRE(xs2.isEmpty());
         REQUIRE(xs2.size() == 0);
         REQUIRE_THROWS_AS(xs2.uncons(), std::out_of_range);
+        REQUIRE(!xs1.isEmpty());
+        REQUIRE(xs1 == List<int>(123));
 
         List<PI> ys(PI(new int(456)));
         REQUIRE_NOTHROW(ys.uncons());
@@ -35,6 +41,10 @@ TEST_CASE("test List uncons", "[List][uncons]") {
         REQUIRE(ys.uncons().second.isEmpty());
         REQUIRE(ys.uncons().second.size() == 0);
         REQUIRE_THROWS_AS(ys.uncons().second.uncons(), std::out_of_range);
+        REQUIRE(!ys.isEmpty());
+        REQUIRE(ys.size() == 1);
+        REQUIRE(ys.head() != nullptr);
+        REQUIRE(*ys.head() == 456);
     }
     SECTION("List with multiple elements") {
         List<int> xs1(1, 2, 3, 4, 5);
@@ -49,6 +59,9 @@ TEST_CASE("test List uncons", "[List][uncons]") {
         REQUIRE(xs2.isEmpty());
         REQUIRE(xs2.size() == 0);
         REQUIRE_THROWS_AS(xs2.uncons(), std::out_of_range);
+        REQUIRE(!xs1.isEmpty());
+        REQUIRE(xs1.size() == 5);
+        REQUIRE(xs1 == List<int>(1, 2, 3, 4, 5));
 
         List<PI> ys1 = xs1.map([](int x) { return PI(new int(6 - x)); });
         List<PI> ys2 = ys1;
@@ -63,5 +76,11 @@ TEST_CASE("test List uncons", "[List][uncons]") {
         } while (!ys2.isEmpty());
         REQUIRE(ys2.isEmpty());
         REQUIRE(ys2.size() == 0);
+        REQUIRE(!ys1.isEmpty());
+        REQUIRE(ys1.size() == 5);
+        for (i = 0; i < 5; ++i) {
+            REQUIRE(ys1[i] != nullptr);
+            REQUIRE(*ys1[i] == 5 - i);
+        }
     }
 }
