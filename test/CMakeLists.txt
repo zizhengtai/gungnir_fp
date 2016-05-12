@@ -52,7 +52,9 @@ add_executable(test_all
   List/test_begin_end.cpp
 
   Option/test_constructors.cpp
+  Option/test_foreach.cpp
   Option/test_unowned_constructors.cpp
+  Option/test_unowned_foreach.cpp
 
   lazy/test_lazy_val.cpp
 )
