@@ -37,6 +37,8 @@ TEST_CASE("test UnownedOption constructors", "[UnownedOption][constructors]") {
 
         UnownedOption<PI> y1;
         REQUIRE(y1.isEmpty());
+        REQUIRE(y1.ptr() == nullptr);
+        REQUIRE((y1 == nullptr));
 
         // copy constructor
         UnownedOption<PI> y2(y1);
@@ -58,6 +60,8 @@ TEST_CASE("test UnownedOption constructors", "[UnownedOption][constructors]") {
 
         UnownedOption<S> z1;
         REQUIRE(z1.isEmpty());
+        REQUIRE(z1.ptr() == nullptr);
+        REQUIRE((z1 == nullptr));
 
         // copy constructor
         UnownedOption<S> z2(z1);
@@ -114,5 +118,99 @@ TEST_CASE("test UnownedOption constructors", "[UnownedOption][constructors]") {
         REQUIRE(*x3.ptr() == 123);
         REQUIRE(*x3 == 123);
         REQUIRE(x3.get() == 123);
+
+        PI y(new int(456));
+
+        UnownedOption<PI> y1(&y);
+        REQUIRE_FALSE(y1.isEmpty());
+        REQUIRE(y1.ptr() == &y);
+        REQUIRE((y1 == &y));
+        REQUIRE(*y1.ptr() == y);
+        REQUIRE(*y1 == y);
+        REQUIRE(y1.get() == y);
+        REQUIRE(**y1.ptr() == 456);
+        REQUIRE(**y1 == 456);
+        REQUIRE(*(*y1).get() == 456);
+        REQUIRE(*y1->get() == 456);
+
+        // copy constructor
+        UnownedOption<PI> y2(y1);
+        REQUIRE_FALSE(y1.isEmpty());
+        REQUIRE_FALSE(y2.isEmpty());
+        REQUIRE(y1.ptr() == &y);
+        REQUIRE(y2.ptr() == &y);
+        REQUIRE((y1 == &y));
+        REQUIRE((y2 == &y));
+        REQUIRE(*y1.ptr() == y);
+        REQUIRE(*y2.ptr() == y);
+        REQUIRE(*y1 == y);
+        REQUIRE(*y2 == y);
+        REQUIRE(y1.get() == y);
+        REQUIRE(y2.get() == y);
+        REQUIRE(**y1.ptr() == 456);
+        REQUIRE(**y2.ptr() == 456);
+        REQUIRE(**y1 == 456);
+        REQUIRE(**y2 == 456);
+        REQUIRE(*(*y1).get() == 456);
+        REQUIRE(*(*y2).get() == 456);
+        REQUIRE(*y1->get() == 456);
+        REQUIRE(*y2->get() == 456);
+
+        // move constructor
+        UnownedOption<PI> y3(std::move(y1));
+        REQUIRE(y1.isEmpty());
+        REQUIRE(y1.ptr() == nullptr);
+        REQUIRE((y1 == nullptr));
+        REQUIRE_FALSE(y3.isEmpty());
+        REQUIRE(y3.ptr() == &y);
+        REQUIRE((y3 == &y));
+        REQUIRE(*y3.ptr() == y);
+        REQUIRE(*y3 == y);
+        REQUIRE(y3.get() == y);
+        REQUIRE(**y3.ptr() == 456);
+        REQUIRE(**y3 == 456);
+        REQUIRE(*(*y3).get() == 456);
+        REQUIRE(*y3->get() == 456);
+
+        S z("hello");
+
+        UnownedOption<S> z1(&z);
+        REQUIRE_FALSE(z1.isEmpty());
+        REQUIRE(z1.ptr() == &z);
+        REQUIRE((z1 == &z));
+        REQUIRE(*z1.ptr() == "hello");
+        REQUIRE(*z1 == "hello");
+        REQUIRE(z1.get() == "hello");
+        REQUIRE(z1->size() == 5);
+
+        // copy constructor
+        UnownedOption<S> z2(z1);
+        REQUIRE_FALSE(z1.isEmpty());
+        REQUIRE_FALSE(z2.isEmpty());
+        REQUIRE(z1.ptr() == &z);
+        REQUIRE(z2.ptr() == &z);
+        REQUIRE((z1 == &z));
+        REQUIRE((z2 == &z));
+        REQUIRE(*z1.ptr() == "hello");
+        REQUIRE(*z2.ptr() == "hello");
+        REQUIRE(*z1 == "hello");
+        REQUIRE(*z2 == "hello");
+        REQUIRE(z1.get() == "hello");
+        REQUIRE(z2.get() == "hello");
+        REQUIRE(z1->size() == 5);
+        REQUIRE(z2->size() == 5);
+
+        // move constructor
+        UnownedOption<S> z3(std::move(z1));
+        REQUIRE(z1.isEmpty());
+        REQUIRE(z1.ptr() == nullptr);
+        REQUIRE((z1 == nullptr));
+        REQUIRE_FALSE(z3.isEmpty());
+        REQUIRE(z3.ptr() == &z);
+        REQUIRE((z3 == &z));
+        REQUIRE(*z3.ptr() == "hello");
+        REQUIRE(*z3 == "hello");
+        REQUIRE(z3.get() == "hello");
+        REQUIRE(z3->size() == 5);
     }
 }
