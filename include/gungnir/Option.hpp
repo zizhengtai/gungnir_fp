@@ -162,6 +162,9 @@ public:
     UnownedOption<const T> begin() const { return UnownedOption<const T>(impl().ptr()); }
     UnownedOption<const T> end() const { return UnownedOption<const T>(); }
 
+    UnownedOption<const T> cbegin() const { return begin(); }
+    UnownedOption<const T> cend() const { return end(); }
+
 private:
     template<typename, typename> friend class BaseOption;
 
