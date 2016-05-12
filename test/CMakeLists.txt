@@ -51,5 +51,7 @@ add_executable(test_all
   List/test_reduce_right.cpp
   List/test_begin_end.cpp
 
+  Option/test_constructors.cpp
+
   lazy/test_lazy_val.cpp
 )
