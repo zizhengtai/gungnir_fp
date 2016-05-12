@@ -17,6 +17,7 @@ TEST_CASE("test Option constructors", "[Option][constructors]") {
         REQUIRE(x1.ptr() == nullptr);
         REQUIRE((x1 == nullptr));
 
+        // move constructor
         Option<int> x2(std::move(x1));
         REQUIRE(x1.isEmpty());
         REQUIRE(x2.isEmpty());
@@ -28,6 +29,7 @@ TEST_CASE("test Option constructors", "[Option][constructors]") {
         Option<PI> y1;
         REQUIRE(y1.isEmpty());
 
+        // move constructor
         Option<PI> y2(std::move(y1));
         REQUIRE(y1.isEmpty());
         REQUIRE(y2.isEmpty());
@@ -39,6 +41,7 @@ TEST_CASE("test Option constructors", "[Option][constructors]") {
         Option<S> z1;
         REQUIRE(z1.isEmpty());
 
+        // move constructor
         Option<S> z2(std::move(z1));
         REQUIRE(z1.isEmpty());
         REQUIRE(z2.isEmpty());
@@ -56,6 +59,7 @@ TEST_CASE("test Option constructors", "[Option][constructors]") {
         REQUIRE(*x1 == 123);
         REQUIRE(x1.get() == 123);
 
+        // move constructor
         Option<int> x2(std::move(x1));
         REQUIRE(x1.isEmpty());
         REQUIRE(x1.ptr() == nullptr);
@@ -76,6 +80,7 @@ TEST_CASE("test Option constructors", "[Option][constructors]") {
         REQUIRE((*y1).get() == nullptr);
         REQUIRE(y1->get() == nullptr);
 
+        // move constructor
         Option<PI> y2(std::move(y1));
         REQUIRE(y1.isEmpty());
         REQUIRE(y1.ptr() == nullptr);
@@ -99,6 +104,7 @@ TEST_CASE("test Option constructors", "[Option][constructors]") {
         REQUIRE(**y3 == 456);
         REQUIRE(*y3.get() == 456);
 
+        // move constructor
         Option<PI> y4(std::move(y3));
         REQUIRE(y3.isEmpty());
         REQUIRE(y3.ptr() == nullptr);
@@ -121,6 +127,7 @@ TEST_CASE("test Option constructors", "[Option][constructors]") {
         REQUIRE(*z1 == "hello");
         REQUIRE(z1.get() == "hello");
 
+        // move constructor
         Option<S> z2(std::move(z1));
         REQUIRE(z1.isEmpty());
         REQUIRE(z1.ptr() == nullptr);
