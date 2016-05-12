@@ -11,7 +11,7 @@ TEST_CASE("test UnownedOption foreach", "[UnownedOption][foreach]") {
     using PI = std::unique_ptr<int>;
     using S = std::string;
 
-    SECTION("empty Option") {
+    SECTION("empty UnownedOption") {
         unsigned int count = 0;
 
         UnownedOption<int> x;
@@ -26,7 +26,7 @@ TEST_CASE("test UnownedOption foreach", "[UnownedOption][foreach]") {
         z.foreach([&count](const S &) { ++count; });
         REQUIRE(count == 0);
     }
-    SECTION("non-empty Option") {
+    SECTION("non-empty UnownedOption") {
         unsigned int count = 0;
 
         int i = 123;

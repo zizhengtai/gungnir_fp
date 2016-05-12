@@ -53,8 +53,10 @@ add_executable(test_all
 
   Option/test_constructors.cpp
   Option/test_foreach.cpp
+  Option/test_map.cpp
   Option/test_unowned_constructors.cpp
   Option/test_unowned_foreach.cpp
+  Option/test_unowned_map.cpp
 
   lazy/test_lazy_val.cpp
 )
