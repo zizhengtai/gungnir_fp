@@ -47,8 +47,8 @@ public:
     T * operator->() { return impl().ptr(); }
     const T * operator->() const { return impl().ptr(); }
 
-    bool operator==(const T *that) const { return impl().ptr() == that; }
-    bool operator!=(const T *that) const { return impl().ptr() != that; }
+    bool operator==(T *that) const { return impl().ptr() == that; }
+    bool operator!=(T *that) const { return impl().ptr() != that; }
     bool operator==(const BaseOption &that) const { return impl().ptr() == that.impl().ptr(); }
     bool operator!=(const BaseOption &that) const { return impl().ptr() != that.impl().ptr(); }
 
@@ -252,11 +252,18 @@ public:
 
     UnownedOption(const UnownedOption &) = default;
 
-    UnownedOption(UnownedOption &&) = default;
+    UnownedOption(UnownedOption &&that) noexcept : ptr_(that.ptr_)
+    {
+        that.ptr_ = nullptr;
+    }
 
     UnownedOption & operator=(const UnownedOption &) = default;
 
-    UnownedOption & operator=(UnownedOption &&) = default;
+    UnownedOption & operator=(UnownedOption &&that)
+    {
+        ptr_ = that.ptr_;
+        that.ptr_ = nullptr;
+    }
 
     UnownedOption & operator++()
     {

@@ -77,4 +77,42 @@ TEST_CASE("test UnownedOption constructors", "[UnownedOption][constructors]") {
         REQUIRE((z1 == nullptr));
         REQUIRE((z3 == nullptr));
     }
+    SECTION("non-empty UnownedOption") {
+        int x = 123;
+
+        UnownedOption<int> x1(&x);
+        REQUIRE_FALSE(x1.isEmpty());
+        REQUIRE(x1.ptr() == &x);
+        REQUIRE((x1 == &x));
+        REQUIRE(*x1.ptr() == 123);
+        REQUIRE(*x1 == 123);
+        REQUIRE(x1.get() == 123);
+
+        // copy constructor
+        UnownedOption<int> x2(x1);
+        REQUIRE_FALSE(x1.isEmpty());
+        REQUIRE_FALSE(x2.isEmpty());
+        REQUIRE(x1.ptr() == &x);
+        REQUIRE(x2.ptr() == &x);
+        REQUIRE((x1 == &x));
+        REQUIRE((x2 == &x));
+        REQUIRE(*x1.ptr() == 123);
+        REQUIRE(*x2.ptr() == 123);
+        REQUIRE(*x1 == 123);
+        REQUIRE(*x2 == 123);
+        REQUIRE(x1.get() == 123);
+        REQUIRE(x2.get() == 123);
+
+        // move constructor
+        UnownedOption<int> x3(std::move(x1));
+        REQUIRE(x1.isEmpty());
+        REQUIRE(x1.ptr() == nullptr);
+        REQUIRE((x1 == nullptr));
+        REQUIRE_FALSE(x3.isEmpty());
+        REQUIRE(x3.ptr() == &x);
+        REQUIRE((x3 == &x));
+        REQUIRE(*x3.ptr() == 123);
+        REQUIRE(*x3 == 123);
+        REQUIRE(x3.get() == 123);
+    }
 }
