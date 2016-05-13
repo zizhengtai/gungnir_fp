@@ -59,6 +59,9 @@ public:
     const T & getOrElse(const T &that) const { return impl().isEmpty() ? that : get(); }
     T getOrElse(T &&that) const { return impl().isEmpty() ? that : get(); }
 
+    T moveOrElse(const T &that) { return impl().isEmpty() ? std::move(get()) : that; }
+    T moveOrElse(T &&that) { return impl().isEmpty() ? std::move(get()) : that; }
+
     OptionBase & orElse(OptionBase &that) { return impl().isEmpty() ? that : *this; }
     const OptionBase & orElse(const OptionBase &that) const { return impl().isEmpty() ? that : *this; }
     Impl orElse(Impl &&that) const { return impl().isEmpty() ? that : impl(); }
