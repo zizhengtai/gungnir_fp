@@ -30,7 +30,7 @@ template<typename T> class UnownedOption;
 namespace detail {
 
 template<typename T, typename Impl>
-class BaseOption {
+class OptionBase {
 public:
     bool isEmpty() const;
     T * ptr() const;
@@ -49,8 +49,8 @@ public:
 
     bool operator==(T *that) const { return impl().ptr() == that; }
     bool operator!=(T *that) const { return impl().ptr() != that; }
-    bool operator==(const BaseOption &that) const { return impl().ptr() == that.impl().ptr(); }
-    bool operator!=(const BaseOption &that) const { return impl().ptr() != that.impl().ptr(); }
+    bool operator==(const OptionBase &that) const { return impl().ptr() == that.impl().ptr(); }
+    bool operator!=(const OptionBase &that) const { return impl().ptr() != that.impl().ptr(); }
 
     T & get() { return *impl().ptr(); }
     const T & get() const { return *impl().ptr(); }
@@ -59,8 +59,8 @@ public:
     const T & getOrElse(const T &that) const { return impl().isEmpty() ? that : get(); }
     T getOrElse(T &&that) const { return impl().isEmpty() ? that : get(); }
 
-    BaseOption & orElse(BaseOption &that) { return impl().isEmpty() ? that : *this; }
-    const BaseOption & orElse(const BaseOption &that) const { return impl().isEmpty() ? that : *this; }
+    OptionBase & orElse(OptionBase &that) { return impl().isEmpty() ? that : *this; }
+    const OptionBase & orElse(const OptionBase &that) const { return impl().isEmpty() ? that : *this; }
     Impl orElse(Impl &&that) const { return impl().isEmpty() ? that : impl(); }
 
     template<typename Fn>
@@ -107,7 +107,7 @@ public:
         typename Opt = Decay<Ret<Fn, T>>,
         typename U = typename HKT<Opt>::L,
         typename = typename std::enable_if<
-            std::is_base_of<BaseOption<U, Opt>, Opt>::value
+            std::is_base_of<OptionBase<U, Opt>, Opt>::value
         >::type
     >
     Opt flatMap(Fn f) const
@@ -166,15 +166,15 @@ public:
     UnownedOption<const T> cend() const { return end(); }
 
 private:
-    template<typename, typename> friend class BaseOption;
+    template<typename, typename> friend class OptionBase;
 
-    Impl & impl() { return *static_cast<Impl *>(this); }
-    const Impl & impl() const { return *static_cast<const Impl *>(this); }
+    Impl & impl() { return static_cast<Impl &>(*this); }
+    const Impl & impl() const { return static_cast<const Impl &>(*this); }
 };
 
 }  // namespace detail
 
-using detail::BaseOption;
+using detail::OptionBase;
 
 /**
  * An optional value with managed storage.
@@ -184,7 +184,7 @@ using detail::BaseOption;
  * @tparam T the type of the contained value
  */
 template<typename T>
-class Option final : public BaseOption<T, Option<T>> {
+class Option final : public OptionBase<T, Option<T>> {
 public:
     Option() noexcept : empty_(true) {}
 
@@ -228,7 +228,7 @@ public:
     void clear()
     {
         if (!empty_) {
-            BaseOption<T, Option>::get().~T();
+            OptionBase<T, Option>::get().~T();
             empty_ = true;
         }
     }
@@ -247,7 +247,7 @@ private:
  */
 template<typename T>
 class UnownedOption final
-    : public BaseOption<T, UnownedOption<T>>
+    : public OptionBase<T, UnownedOption<T>>
     , public std::iterator<std::forward_iterator_tag, T> {
 
 public:
