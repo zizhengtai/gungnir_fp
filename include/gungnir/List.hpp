@@ -780,32 +780,34 @@ public:
      * @brief Returns a list consisting of elements of this list sorted in
      *        ascending order, as determined by the `<` operator.
      *
-     * The sort is stable. That is, equal elements appear in the same order
-     * in the sorted list as in the original.
+     * If `stable` is `true`, the sort will be stable. That is, equal elements
+     * appear in the same order in the sorted list as in the original.
      *
+     * @param stable whether to use stable sort
      * @return a list consisting of elements of this list sorted in
      *         ascending order, as determined by the `<` operator
      */
-    List sorted() const
+    List sorted(bool stable = false) const
     {
-        return sorted([](const A &x, const A &y) { return x < y; });
+        return sorted([](const A &x, const A &y) { return x < y; }, stable);
     }
 
     /**
      * @brief Returns a list consisting of elements of this list sorted in
      *        ascending order, as determined by the given comparator.
      *
-     * The sort is stable. That is, equal elements appear in the same order
-     * in the sorted list as in the original.
+     * If `stable` is `true`, the sort will be stable. That is, equal elements
+     * appear in the same order in the sorted list as in the original.
      *
      * @tparam Fn the type of the comparator
      * @param lt a comparator that returns `true` if its first argument
      *           is *less* than (i.e., is ordered *before*) the second
+     * @param stable whether to use stable sort
      * @return a list consisting of elements of this list sorted in
      *         ascending order, as determined by the given comparator
      */
     template<typename Fn>
-    List sorted(Fn lt) const
+    List sorted(Fn lt, bool stable = false) const
     {
         std::vector<Ptr<A>> buf;
         buf.reserve(size());
@@ -813,10 +815,14 @@ public:
             buf.emplace_back(x);
         });
 
-        std::stable_sort(
-                buf.begin(),
-                buf.end(),
-                [&lt](const Ptr<A> &x, const Ptr<A> &y) { return lt(*x, *y); });
+        auto comp = [&lt](const Ptr<A> &x, const Ptr<A> &y) {
+            return lt(*x, *y);
+        };
+        if (stable) {
+            std::stable_sort(buf.begin(), buf.end(), comp);
+        } else {
+            std::sort(buf.begin(), buf.end(), comp);
+        }
 
         return toList(
                 size(),
