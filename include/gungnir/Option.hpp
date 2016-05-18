@@ -57,9 +57,7 @@ public:
 
     template<
         typename T1 = T,
-        typename = typename std::enable_if<
-            std::is_trivially_copy_constructible<T1>::value
-        >::type
+        typename = typename std::enable_if<std::is_scalar<T1>::value>::type
     >
     T getOrElse(T that) const { return impl().isEmpty() ? that : get(); }
 
