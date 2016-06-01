@@ -49,8 +49,8 @@ TEST_CASE("test List equal", "[List][equal]") {
             List<int>(2, 2, 3),
             List<int>(1, 0, 3)
         };
-        for (const auto &xs: xss) {
-            for (const auto &ys: xss) {
+        for (const auto& xs: xss) {
+            for (const auto& ys: xss) {
                 if (&xs == &ys) {
                     REQUIRE(xs == ys);
                     REQUIRE_FALSE(xs != ys);

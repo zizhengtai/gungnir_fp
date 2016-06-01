@@ -40,11 +40,11 @@ TEST_CASE("test List count", "[List][count]") {
         REQUIRE(ys.count(PI()) == 0);
         REQUIRE(ys.count(PI(new int(456))) == 0);
         REQUIRE(ys.count(ys.head()) == 1);
-        REQUIRE(ys.count(alwaysTrue<const PI &>) == 1);
-        REQUIRE(ys.count(alwaysFalse<const PI &>) == 0);
-        REQUIRE(ys.count([](const PI &p) { return isEven(*p); }) == 1);
-        REQUIRE(ys.count([](const PI &p) { return isOdd(*p); }) == 0);
-        REQUIRE(ys.count([](const PI &p) { return *p == 456; }) == 1);
+        REQUIRE(ys.count(alwaysTrue<const PI&>) == 1);
+        REQUIRE(ys.count(alwaysFalse<const PI&>) == 0);
+        REQUIRE(ys.count([](const PI& p) { return isEven(*p); }) == 1);
+        REQUIRE(ys.count([](const PI& p) { return isOdd(*p); }) == 0);
+        REQUIRE(ys.count([](const PI& p) { return *p == 456; }) == 1);
     }
     SECTION("List with multiple element") {
         List<int> xs(1, 2, 3, 2, 5, 3, 2);
@@ -63,14 +63,14 @@ TEST_CASE("test List count", "[List][count]") {
             REQUIRE(ys.count(ys[i]) == 1);
             REQUIRE(ys.count(PI(new int(*ys[i]))) == 0);
         }
-        REQUIRE(ys.count(alwaysTrue<const PI &>) == 7);
-        REQUIRE(ys.count(alwaysFalse<const PI &>) == 0);
-        REQUIRE(ys.count([](const PI &p) { return isEven(*p); }) == 3);
-        REQUIRE(ys.count([](const PI &p) { return isOdd(*p); }) == 4);
-        REQUIRE(ys.count([](const PI &p) { return *p == 1; }) == 1);
-        REQUIRE(ys.count([](const PI &p) { return *p == 2; }) == 3);
-        REQUIRE(ys.count([](const PI &p) { return *p == 3; }) == 2);
-        REQUIRE(ys.count([](const PI &p) { return *p == 4; }) == 0);
-        REQUIRE(ys.count([](const PI &p) { return *p == 5; }) == 1);
+        REQUIRE(ys.count(alwaysTrue<const PI&>) == 7);
+        REQUIRE(ys.count(alwaysFalse<const PI&>) == 0);
+        REQUIRE(ys.count([](const PI& p) { return isEven(*p); }) == 3);
+        REQUIRE(ys.count([](const PI& p) { return isOdd(*p); }) == 4);
+        REQUIRE(ys.count([](const PI& p) { return *p == 1; }) == 1);
+        REQUIRE(ys.count([](const PI& p) { return *p == 2; }) == 3);
+        REQUIRE(ys.count([](const PI& p) { return *p == 3; }) == 2);
+        REQUIRE(ys.count([](const PI& p) { return *p == 4; }) == 0);
+        REQUIRE(ys.count([](const PI& p) { return *p == 5; }) == 1);
     }
 }

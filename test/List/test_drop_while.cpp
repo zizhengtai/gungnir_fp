@@ -22,8 +22,8 @@ TEST_CASE("test List dropWhile", "[List][dropWhile]") {
         REQUIRE(xs.dropWhile(alwaysFalse<int>).isEmpty());
 
         List<PI> ys;
-        REQUIRE(ys.dropWhile(alwaysTrue<const PI &>).isEmpty());
-        REQUIRE(ys.dropWhile(alwaysFalse<const PI &>).isEmpty());
+        REQUIRE(ys.dropWhile(alwaysTrue<const PI&>).isEmpty());
+        REQUIRE(ys.dropWhile(alwaysFalse<const PI&>).isEmpty());
     }
     SECTION("List with one element") {
         List<int> xs(123);
@@ -33,10 +33,10 @@ TEST_CASE("test List dropWhile", "[List][dropWhile]") {
         REQUIRE(xs.dropWhile(isOdd).isEmpty());
 
         List<PI> ys(PI(new int(456)));
-        REQUIRE(ys.dropWhile(alwaysTrue<const PI &>).isEmpty());
-        REQUIRE(ys.dropWhile(alwaysFalse<const PI &>) == ys);
-        REQUIRE(ys.dropWhile([](const PI &p) { return isEven(*p); }).isEmpty());
-        REQUIRE(ys.dropWhile([](const PI &p) { return isOdd(*p); }) == ys);
+        REQUIRE(ys.dropWhile(alwaysTrue<const PI&>).isEmpty());
+        REQUIRE(ys.dropWhile(alwaysFalse<const PI&>) == ys);
+        REQUIRE(ys.dropWhile([](const PI& p) { return isEven(*p); }).isEmpty());
+        REQUIRE(ys.dropWhile([](const PI& p) { return isOdd(*p); }) == ys);
     }
     SECTION("List with multiple element") {
         List<int> xs(2, 4, 1, 5, 3);
@@ -54,11 +54,11 @@ TEST_CASE("test List dropWhile", "[List][dropWhile]") {
             PI(new int(5)),
             PI(new int(3))
         );
-        REQUIRE(ys.dropWhile(alwaysTrue<const PI &>).isEmpty());
-        REQUIRE(ys.dropWhile(alwaysFalse<const PI &>) == ys);
-        REQUIRE(ys.dropWhile([](const PI &p) { return *p > 1; }) == ys.drop(2));
-        REQUIRE(ys.dropWhile([](const PI &p) { return *p > 0; }) == List<PI>());
-        REQUIRE(ys.dropWhile([](const PI &p) { return *p < 5; }) == ys.drop(3));
-        REQUIRE(ys.dropWhile([](const PI &p) { return *p < 1; }) == ys);
+        REQUIRE(ys.dropWhile(alwaysTrue<const PI&>).isEmpty());
+        REQUIRE(ys.dropWhile(alwaysFalse<const PI&>) == ys);
+        REQUIRE(ys.dropWhile([](const PI& p) { return *p > 1; }) == ys.drop(2));
+        REQUIRE(ys.dropWhile([](const PI& p) { return *p > 0; }) == List<PI>());
+        REQUIRE(ys.dropWhile([](const PI& p) { return *p < 5; }) == ys.drop(3));
+        REQUIRE(ys.dropWhile([](const PI& p) { return *p < 1; }) == ys);
     }
 }

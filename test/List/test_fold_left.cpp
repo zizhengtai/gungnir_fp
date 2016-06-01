@@ -16,14 +16,14 @@ static Ret throwOp(A, B)
 TEST_CASE("test List foldLeft", "[List][foldLeft]") {
 
     using PI = std::unique_ptr<int>;
-    using PIRef = const PI &;
+    using PIRef = const PI&;
 
     struct NoCopy {
         NoCopy(std::string s) : val(std::move(s)) {}
-        NoCopy(const NoCopy &) = delete;
-        NoCopy(NoCopy &&) = default;
-        NoCopy & operator=(const NoCopy &) = delete;
-        NoCopy & operator=(NoCopy &&) = default;
+        NoCopy(const NoCopy&) = delete;
+        NoCopy(NoCopy&&) = default;
+        NoCopy& operator=(const NoCopy&) = delete;
+        NoCopy& operator=(NoCopy&&) = default;
 
         std::string val;
     };

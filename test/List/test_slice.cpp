@@ -54,8 +54,8 @@ TEST_CASE("test List slice", "[List][slice]") {
         REQUIRE(xs.slice(5, 100).isEmpty());
         REQUIRE(xs == List<int>(1, 2, 3, 4, 5));
 
-        const auto toInt = [](const List<PI> &ps) {
-            return ps.map([](const PI &p) { return *p; });
+        const auto toInt = [](const List<PI>& ps) {
+            return ps.map([](const PI& p) { return *p; });
         };
 
         List<PI> ys(

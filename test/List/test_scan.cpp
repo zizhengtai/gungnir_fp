@@ -15,7 +15,7 @@ static Ret throwOp(A, B)
 TEST_CASE("test List scan", "[List][scan]") {
 
     using PI = std::unique_ptr<int>;
-    using PIRef = const PI &;
+    using PIRef = const PI&;
 
     struct Base {
         Base(int x) noexcept: val(x) {}
@@ -25,7 +25,7 @@ TEST_CASE("test List scan", "[List][scan]") {
         Derived(int x) noexcept : Base(x) {}
     };
 
-    const auto toInt = [](const PI &p) { return *p; };
+    const auto toInt = [](const PI& p) { return *p; };
 
     SECTION("empty List") {
         List<int> xs;
@@ -48,9 +48,9 @@ TEST_CASE("test List scan", "[List][scan]") {
         }).map(toInt) == List<int>(654, 654 - 456));
 
         List<Derived> zs(Derived(789));
-        REQUIRE(zs.scan(Base(987), [](const Base &x, const Base &y) {
+        REQUIRE(zs.scan(Base(987), [](const Base& x, const Base& y) {
             return Base(x.val - y.val);
-        }).map([](const Base &x) {
+        }).map([](const Base& x) {
             return x.val;
         }) == List<int>(987, 987 - 789));
     }
@@ -77,9 +77,9 @@ TEST_CASE("test List scan", "[List][scan]") {
             Derived(4),
             Derived(5)
         );
-        REQUIRE(zs.scan(Base(-123), [](const Base &x, const Base &y) {
+        REQUIRE(zs.scan(Base(-123), [](const Base& x, const Base& y) {
             return Base(x.val * y.val);
-        }).map([](const Base &x) {
+        }).map([](const Base& x) {
             return x.val;
         }) == List<int>(
             -123,

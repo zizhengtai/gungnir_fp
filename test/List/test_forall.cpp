@@ -20,8 +20,8 @@ TEST_CASE("test List forall", "[List][forall]") {
         REQUIRE(xs.forall(alwaysFalse<int>));
 
         List<PI> ys;
-        REQUIRE(ys.forall(alwaysTrue<const PI &>));
-        REQUIRE(ys.forall(alwaysFalse<const PI &>));
+        REQUIRE(ys.forall(alwaysTrue<const PI&>));
+        REQUIRE(ys.forall(alwaysFalse<const PI&>));
     }
     SECTION("List with one element") {
         List<int> xs(123);
@@ -31,10 +31,10 @@ TEST_CASE("test List forall", "[List][forall]") {
         REQUIRE(xs.forall(isOdd));
 
         List<PI> ys(PI(new int(456)));
-        REQUIRE(ys.forall(alwaysTrue<const PI &>));
-        REQUIRE_FALSE(ys.forall(alwaysFalse<const PI &>));
-        REQUIRE(ys.forall([](const PI &p) { return isEven(*p); }));
-        REQUIRE_FALSE(ys.forall([](const PI &p) { return isOdd(*p); }));
+        REQUIRE(ys.forall(alwaysTrue<const PI&>));
+        REQUIRE_FALSE(ys.forall(alwaysFalse<const PI&>));
+        REQUIRE(ys.forall([](const PI& p) { return isEven(*p); }));
+        REQUIRE_FALSE(ys.forall([](const PI& p) { return isOdd(*p); }));
     }
     SECTION("List with multiple elements") {
         List<int> xs(1, 2, 3);
@@ -46,11 +46,11 @@ TEST_CASE("test List forall", "[List][forall]") {
         REQUIRE_FALSE(xs.forall([](int x) { return x <= 2; }));
 
         List<PI> ys(PI(new int(4)), PI(new int(5)), PI(new int(6)));
-        REQUIRE(ys.forall(alwaysTrue<const PI &>));
-        REQUIRE_FALSE(ys.forall(alwaysFalse<const PI &>));
-        REQUIRE_FALSE(ys.forall([](const PI &p) { return isEven(*p); }));
-        REQUIRE_FALSE(ys.forall([](const PI &p) { return isOdd(*p); }));
-        REQUIRE(ys.forall([](const PI &p) { return *p >= 4; }));
-        REQUIRE_FALSE(ys.forall([](const PI &p) { return *p >= 5; }));
+        REQUIRE(ys.forall(alwaysTrue<const PI&>));
+        REQUIRE_FALSE(ys.forall(alwaysFalse<const PI&>));
+        REQUIRE_FALSE(ys.forall([](const PI& p) { return isEven(*p); }));
+        REQUIRE_FALSE(ys.forall([](const PI& p) { return isOdd(*p); }));
+        REQUIRE(ys.forall([](const PI& p) { return *p >= 4; }));
+        REQUIRE_FALSE(ys.forall([](const PI& p) { return *p >= 5; }));
     }
 }

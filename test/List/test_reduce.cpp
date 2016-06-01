@@ -29,10 +29,10 @@ TEST_CASE("test List reduce", "[List][reduce]") {
         }) == 123);
 
         List<Derived> ys(456);
-        REQUIRE(ys.reduce([](const Derived &x, const Derived &y) {
+        REQUIRE(ys.reduce([](const Derived& x, const Derived& y) {
             return Derived(x.vald + y.vald);
         }).vald == Approx(456));
-        REQUIRE(ys.reduce([](const Base &x, const Base &y) {
+        REQUIRE(ys.reduce([](const Base& x, const Base& y) {
             return Base(x.val + y.val);
         }).val == 456);
     }
@@ -42,10 +42,10 @@ TEST_CASE("test List reduce", "[List][reduce]") {
                 Approx(1.0 * 2 * 3 * 4 * 5));
 
         List<Derived> ys(5, 4, 3, 2, 1);
-        REQUIRE(ys.reduce([](const Derived &x, const Derived &y) {
+        REQUIRE(ys.reduce([](const Derived& x, const Derived& y) {
             return Derived(x.vald * y.vald);
         }).vald == Approx(5.0 * 4 * 3 * 2 * 1));
-        REQUIRE(ys.reduce([](const Base &x, const Base &y) {
+        REQUIRE(ys.reduce([](const Base& x, const Base& y) {
             return Base(x.val + y.val);
         }).val == (5 + 1) * 5 / 2);
     }

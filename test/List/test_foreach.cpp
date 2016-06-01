@@ -16,7 +16,7 @@ TEST_CASE("test List foreach", "[List][foreach]") {
         REQUIRE(xs.isEmpty());
 
         List<std::unique_ptr<int>> ys;
-        ys.foreach([&v](const std::unique_ptr<int> &p) {
+        ys.foreach([&v](const std::unique_ptr<int>& p) {
             v.emplace_back(*p);
         });
         REQUIRE(v.empty());
@@ -33,7 +33,7 @@ TEST_CASE("test List foreach", "[List][foreach]") {
         REQUIRE(xs[0] == 123);
 
         List<std::unique_ptr<int>> ys(std::unique_ptr<int>(new int(456)));
-        ys.foreach([&v](const std::unique_ptr<int> &p) {
+        ys.foreach([&v](const std::unique_ptr<int>& p) {
             v.emplace_back(*p);
         });
         REQUIRE(v.size() == 2);
@@ -60,7 +60,7 @@ TEST_CASE("test List foreach", "[List][foreach]") {
             std::unique_ptr<int>(new int(7)),
             std::unique_ptr<int>(new int(8))
         );
-        ys.foreach([&v](const std::unique_ptr<int> &p) {
+        ys.foreach([&v](const std::unique_ptr<int>& p) {
             v.emplace_back(*p);
         });
         REQUIRE(v.size() == 8);

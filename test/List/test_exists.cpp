@@ -20,8 +20,8 @@ TEST_CASE("test List exists", "[List][exists]") {
         REQUIRE_FALSE(xs.exists(alwaysFalse<int>));
 
         List<PI> ys;
-        REQUIRE_FALSE(ys.exists(alwaysTrue<const PI &>));
-        REQUIRE_FALSE(ys.exists(alwaysFalse<const PI &>));
+        REQUIRE_FALSE(ys.exists(alwaysTrue<const PI&>));
+        REQUIRE_FALSE(ys.exists(alwaysFalse<const PI&>));
     }
     SECTION("List with one element") {
         List<int> xs(123);
@@ -31,10 +31,10 @@ TEST_CASE("test List exists", "[List][exists]") {
         REQUIRE(xs.exists(isOdd));
 
         List<PI> ys(PI(new int(456)));
-        REQUIRE(ys.exists(alwaysTrue<const PI &>));
-        REQUIRE_FALSE(ys.exists(alwaysFalse<const PI &>));
-        REQUIRE(ys.exists([](const PI &p) { return isEven(*p); }));
-        REQUIRE_FALSE(ys.exists([](const PI &p) { return isOdd(*p); }));
+        REQUIRE(ys.exists(alwaysTrue<const PI&>));
+        REQUIRE_FALSE(ys.exists(alwaysFalse<const PI&>));
+        REQUIRE(ys.exists([](const PI& p) { return isEven(*p); }));
+        REQUIRE_FALSE(ys.exists([](const PI& p) { return isOdd(*p); }));
     }
     SECTION("List with multiple elements") {
         List<int> xs(1, 2, 3);
@@ -46,11 +46,11 @@ TEST_CASE("test List exists", "[List][exists]") {
         REQUIRE_FALSE(xs.exists([](int x) { return x >= 4; }));
 
         List<PI> ys(PI(new int(4)), PI(new int(5)), PI(new int(6)));
-        REQUIRE(ys.exists(alwaysTrue<const PI &>));
-        REQUIRE_FALSE(ys.exists(alwaysFalse<const PI &>));
-        REQUIRE(ys.exists([](const PI &p) { return isEven(*p); }));
-        REQUIRE(ys.exists([](const PI &p) { return isOdd(*p); }));
-        REQUIRE(ys.exists([](const PI &p) { return *p <= 4; }));
-        REQUIRE_FALSE(ys.exists([](const PI &p) { return *p <= 3; }));
+        REQUIRE(ys.exists(alwaysTrue<const PI&>));
+        REQUIRE_FALSE(ys.exists(alwaysFalse<const PI&>));
+        REQUIRE(ys.exists([](const PI& p) { return isEven(*p); }));
+        REQUIRE(ys.exists([](const PI& p) { return isOdd(*p); }));
+        REQUIRE(ys.exists([](const PI& p) { return *p <= 4; }));
+        REQUIRE_FALSE(ys.exists([](const PI& p) { return *p <= 3; }));
     }
 }

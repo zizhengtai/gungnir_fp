@@ -14,7 +14,7 @@ TEST_CASE("test List prepend", "[List][prepend]") {
             : name_(std::move(name)), age_(age)
         {}
 
-        const std::string & name() const
+        const std::string& name() const
         {
             return name_;
         }

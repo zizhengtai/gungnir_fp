@@ -13,10 +13,10 @@ TEST_CASE("test List filter", "[List][filter]") {
         REQUIRE(xs.isEmpty());
 
         List<std::unique_ptr<int>> ys;
-        REQUIRE(ys.filter([](const std::unique_ptr<int> &p) {
+        REQUIRE(ys.filter([](const std::unique_ptr<int>& p) {
             return *p % 2 == 0;
         }).isEmpty());
-        REQUIRE(ys.filter([](const std::unique_ptr<int> &p) {
+        REQUIRE(ys.filter([](const std::unique_ptr<int>& p) {
             return *p % 2 != 0;
         }).isEmpty());
         REQUIRE(ys.isEmpty());
@@ -28,10 +28,10 @@ TEST_CASE("test List filter", "[List][filter]") {
         REQUIRE(xs == List<int>(123));
 
         List<std::unique_ptr<int>> ys(std::unique_ptr<int>(new int(456)));
-        REQUIRE(ys.filter([](const std::unique_ptr<int> &p) {
+        REQUIRE(ys.filter([](const std::unique_ptr<int>& p) {
             return *p % 2 == 0;
         }) == ys);
-        REQUIRE(ys.filter([](const std::unique_ptr<int> &p) {
+        REQUIRE(ys.filter([](const std::unique_ptr<int>& p) {
             return *p % 2 != 0;
         }).isEmpty());
         REQUIRE(ys.size() == 1);
@@ -50,29 +50,29 @@ TEST_CASE("test List filter", "[List][filter]") {
             std::unique_ptr<int>(new int(15)),
             std::unique_ptr<int>(new int(16))
         );
-        const auto ys2 = ys1.filter([](const std::unique_ptr<int> &p) {
+        const auto ys2 = ys1.filter([](const std::unique_ptr<int>& p) {
             return *p % 2 == 0;
         });
         REQUIRE(ys2.size() == 3);
         REQUIRE(*ys2[0] == 12);
         REQUIRE(*ys2[1] == 14);
         REQUIRE(*ys2[2] == 16);
-        const auto ys3 = ys1.filter([](const std::unique_ptr<int> &p) {
+        const auto ys3 = ys1.filter([](const std::unique_ptr<int>& p) {
             return *p % 2 != 0;
         });
         REQUIRE(ys3.size() == 2);
         REQUIRE(*ys3[0] == 11);
         REQUIRE(*ys3[1] == 15);
-        const auto ys4 = ys1.filter([](const std::unique_ptr<int> &) {
+        const auto ys4 = ys1.filter([](const std::unique_ptr<int>&) {
             return true;
         });
         REQUIRE(ys4 == ys1);
-        const auto ys5 = ys1.filter([](const std::unique_ptr<int> &) {
+        const auto ys5 = ys1.filter([](const std::unique_ptr<int>&) {
             return false;
         });
         REQUIRE(ys5.isEmpty());
         REQUIRE(ys1.size() == 5);
-        REQUIRE(ys1.map([](const std::unique_ptr<int> &p) {
+        REQUIRE(ys1.map([](const std::unique_ptr<int>& p) {
             return *p;
         }) == List<int>(11, 12, 14, 15, 16));
     }

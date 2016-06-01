@@ -14,7 +14,7 @@ TEST_CASE("test List map", "[List][map]") {
         Person(std::string name, std::uint8_t age) noexcept
             : name_(std::move(name)), age_(age)
         {}
-        const std::string & name() const { return name_; }
+        const std::string& name() const { return name_; }
         std::uint8_t age() const { return age_; }
     private:
         const std::string name_;
@@ -28,7 +28,7 @@ TEST_CASE("test List map", "[List][map]") {
         REQUIRE(xs2.isEmpty());
 
         List<std::unique_ptr<int>> ys1;
-        List<int> ys2 = ys1.map([](const std::unique_ptr<int> &p) { return *p; });
+        List<int> ys2 = ys1.map([](const std::unique_ptr<int>& p) { return *p; });
         REQUIRE(ys1.isEmpty());
         REQUIRE(ys2.isEmpty());
     }
@@ -41,7 +41,7 @@ TEST_CASE("test List map", "[List][map]") {
         REQUIRE(xs2.head() == "123");
 
         List<std::unique_ptr<int>> ys1(std::unique_ptr<int>(new int(456)));
-        List<int> ys2 = ys1.map([](const std::unique_ptr<int> &p) { return *p; });
+        List<int> ys2 = ys1.map([](const std::unique_ptr<int>& p) { return *p; });
         REQUIRE(ys1.size() == 1);
         REQUIRE(*ys1.head() == 456);
         REQUIRE(ys2.size() == 1);
@@ -65,7 +65,7 @@ TEST_CASE("test List map", "[List][map]") {
             std::unique_ptr<int>(new int(2)),
             std::unique_ptr<int>(new int(1))
         );
-        List<int> ys2 = ys1.map([](const std::unique_ptr<int> &p) { return *p; });
+        List<int> ys2 = ys1.map([](const std::unique_ptr<int>& p) { return *p; });
         REQUIRE(ys1.size() == 5);
         REQUIRE(ys2.size() == 5);
         for (int i = 0; i < 5; ++i) {
@@ -110,7 +110,7 @@ TEST_CASE("test List map", "[List][map]") {
         );
 
         List<std::string> xs2 = xs1
-            .map([](const std::unique_ptr<std::vector<Person>> &p) {
+            .map([](const std::unique_ptr<std::vector<Person>>& p) {
                 return p->at(1);
             })
             .map(&Person::age)

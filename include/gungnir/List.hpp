@@ -1060,7 +1060,7 @@ public:
      * @return the element at the specified position of this list
      * @throws std::out_of_range if `index` is out of range (`index >= size()`)
      */
-    const A & operator[](std::size_t index) const
+    const A& operator[](std::size_t index) const
     {
         if (index >= size()) {
             throw std::out_of_range("index out of range");

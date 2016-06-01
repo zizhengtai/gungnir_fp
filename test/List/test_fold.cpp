@@ -15,7 +15,7 @@ static Ret throwOp(A, B)
 TEST_CASE("test List fold", "[List][fold]") {
 
     using PI = std::unique_ptr<int>;
-    using PIRef = const PI &;
+    using PIRef = const PI&;
 
     struct Base {
         Base(int x) noexcept: val(x) {}
@@ -44,7 +44,7 @@ TEST_CASE("test List fold", "[List][fold]") {
         }) == 456);
 
         List<Derived> zs(Derived(789));
-        REQUIRE(zs.fold(Base(0), [](const Base &x, const Base &y) {
+        REQUIRE(zs.fold(Base(0), [](const Base& x, const Base& y) {
             return Base(x.val + y.val);
         }).val == 789);
     }
@@ -72,7 +72,7 @@ TEST_CASE("test List fold", "[List][fold]") {
             Derived(4),
             Derived(5)
         );
-        REQUIRE(zs.fold(Base(1), [](const Base &x, const Base &y) {
+        REQUIRE(zs.fold(Base(1), [](const Base& x, const Base& y) {
             return Base(x.val * y.val);
         }).val == 1 * 2 * 3 * 4 * 5);
     }

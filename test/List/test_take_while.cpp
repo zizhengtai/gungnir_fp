@@ -22,8 +22,8 @@ TEST_CASE("test List takeWhile", "[List][takeWhile]") {
         REQUIRE(xs.takeWhile(alwaysFalse<int>).isEmpty());
 
         List<PI> ys;
-        REQUIRE(ys.takeWhile(alwaysTrue<const PI &>).isEmpty());
-        REQUIRE(ys.takeWhile(alwaysFalse<const PI &>).isEmpty());
+        REQUIRE(ys.takeWhile(alwaysTrue<const PI&>).isEmpty());
+        REQUIRE(ys.takeWhile(alwaysFalse<const PI&>).isEmpty());
     }
     SECTION("List with one element") {
         List<int> xs(123);
@@ -33,10 +33,10 @@ TEST_CASE("test List takeWhile", "[List][takeWhile]") {
         REQUIRE(xs.takeWhile(isOdd) == List<int>(123));
 
         List<PI> ys(PI(new int(456)));
-        REQUIRE(ys.takeWhile(alwaysTrue<const PI &>) == ys);
-        REQUIRE(ys.takeWhile(alwaysFalse<const PI &>).isEmpty());
-        REQUIRE(ys.takeWhile([](const PI &p) { return isEven(*p); }) == ys);
-        REQUIRE(ys.takeWhile([](const PI &p) { return isOdd(*p); }).isEmpty());
+        REQUIRE(ys.takeWhile(alwaysTrue<const PI&>) == ys);
+        REQUIRE(ys.takeWhile(alwaysFalse<const PI&>).isEmpty());
+        REQUIRE(ys.takeWhile([](const PI& p) { return isEven(*p); }) == ys);
+        REQUIRE(ys.takeWhile([](const PI& p) { return isOdd(*p); }).isEmpty());
     }
     SECTION("List with multiple elements") {
         List<int> xs(2, 4, 1, 5, 3);
@@ -54,11 +54,11 @@ TEST_CASE("test List takeWhile", "[List][takeWhile]") {
             PI(new int(5)),
             PI(new int(3))
         );
-        REQUIRE(ys.takeWhile(alwaysTrue<const PI &>) == ys);
-        REQUIRE(ys.takeWhile(alwaysFalse<const PI &>).isEmpty());
-        REQUIRE(ys.takeWhile([](const PI &p) { return *p > 1; }) == ys.take(2));
-        REQUIRE(ys.takeWhile([](const PI &p) { return *p > 0; }) == ys);
-        REQUIRE(ys.takeWhile([](const PI &p) { return *p < 5; }) == ys.take(3));
-        REQUIRE(ys.takeWhile([](const PI &p) { return *p < 1; }) == List<PI>());
+        REQUIRE(ys.takeWhile(alwaysTrue<const PI&>) == ys);
+        REQUIRE(ys.takeWhile(alwaysFalse<const PI&>).isEmpty());
+        REQUIRE(ys.takeWhile([](const PI& p) { return *p > 1; }) == ys.take(2));
+        REQUIRE(ys.takeWhile([](const PI& p) { return *p > 0; }) == ys);
+        REQUIRE(ys.takeWhile([](const PI& p) { return *p < 5; }) == ys.take(3));
+        REQUIRE(ys.takeWhile([](const PI& p) { return *p < 1; }) == List<PI>());
     }
 }

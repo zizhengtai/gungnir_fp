@@ -55,7 +55,7 @@ TEST_CASE("test List updated", "[List][updated]") {
         const auto ys2 = ys1.updated(0, PI(new int(321)));
         const auto ys3 = ys1.updated(2, PI(new int(321)));
         const auto ys4 = ys1.updated(4, PI(new int(321)));
-        const auto toInt = [](const PI &p) { return *p; };
+        const auto toInt = [](const PI& p) { return *p; };
         REQUIRE(ys2.map(toInt) == List<int>(321, 4, 3, 2, 1));
         REQUIRE(ys3.map(toInt) == List<int>(5, 4, 321, 2, 1));
         REQUIRE(ys4.map(toInt) == List<int>(5, 4, 3, 2, 321));

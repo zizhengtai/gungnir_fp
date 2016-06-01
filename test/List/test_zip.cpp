@@ -10,9 +10,9 @@ using gungnir::List;
 
 template<typename A, typename B>
 static bool eq(
-        const List<std::pair<A, B>> &zipped,
-        const List<A> &xs,
-        const List<B> &ys)
+        const List<std::pair<A, B>>& zipped,
+        const List<A>& xs,
+        const List<B>& ys)
 {
     std::size_t size = std::min(xs.size(), ys.size());
     if (zipped.size() != size) {
@@ -32,9 +32,9 @@ static bool eqRef(
         const List<std::pair<
             std::reference_wrapper<const A>,
             std::reference_wrapper<const B>
-        >> &zipped,
-        const List<A> &xs,
-        const List<B> &ys)
+        >>& zipped,
+        const List<A>& xs,
+        const List<B>& ys)
 {
     std::size_t size = std::min(xs.size(), ys.size());
     if (zipped.size() != size) {

@@ -15,9 +15,9 @@ static Ret throwOp(A, B)
 TEST_CASE("test List scanRight", "[List][scanRight]") {
 
     using PI = std::unique_ptr<int>;
-    using PIRef = const PI &;
+    using PIRef = const PI&;
 
-    const auto toInt = [](const PI &p) { return *p; };
+    const auto toInt = [](const PI& p) { return *p; };
 
     SECTION("empty List") {
         List<int> xs;
@@ -32,7 +32,7 @@ TEST_CASE("test List scanRight", "[List][scanRight]") {
         List<int> xs(123);
         REQUIRE(xs.scanRight(321, [](int x, int y) { return x - y; }) ==
                 List<int>(123 - 321, 321));
-        REQUIRE(xs.scanRight(List<int>(321), [](int x, const List<int> &xs) {
+        REQUIRE(xs.scanRight(List<int>(321), [](int x, const List<int>& xs) {
             return xs.prepend(x);
         }) == List<List<int>>(List<int>(123, 321), List<int>(321)));
 
@@ -40,7 +40,7 @@ TEST_CASE("test List scanRight", "[List][scanRight]") {
         REQUIRE(ys.scanRight(PI(new int(654)), [](PIRef x, PIRef y) {
             return PI(new int(*x - *y));
         }).map(toInt) == List<int>(456 - 654, 654));
-        REQUIRE(ys.scanRight(List<int>(654), [](PIRef x, const List<int> &xs) {
+        REQUIRE(ys.scanRight(List<int>(654), [](PIRef x, const List<int>& xs) {
             return xs.prepend(*x);
         }) == List<List<int>>(List<int>(456, 654), List<int>(654)));
     }
@@ -48,7 +48,7 @@ TEST_CASE("test List scanRight", "[List][scanRight]") {
         List<int> xs(1, 2, 3, 4, 5);
         REQUIRE(xs.scanRight(15, [](int x, int y) { return x - y; }) ==
                 List<int>(-12, 13, -11, 14, -10, 15));
-        REQUIRE(xs.scanRight(List<int>(6), [](int x, const List<int> &xs) {
+        REQUIRE(xs.scanRight(List<int>(6), [](int x, const List<int>& xs) {
             return xs.prepend(x);
         }) == List<List<int>>(
             List<int>(1, 2, 3, 4, 5, 6),
@@ -69,9 +69,9 @@ TEST_CASE("test List scanRight", "[List][scanRight]") {
         REQUIRE(ys.scanRight(PI(new int(15)), [](PIRef x, PIRef y) {
             return PI(new int(*x - *y));
         }).map(toInt) == List<int>(-12, 17, -13, 16, -14, 15));
-        REQUIRE(ys.scanRight(List<PI>(PI(new int(0))), [](PIRef x, const List<PI> &xs) {
+        REQUIRE(ys.scanRight(List<PI>(PI(new int(0))), [](PIRef x, const List<PI>& xs) {
             return xs.prepend(PI(new int(*x)));
-        }).map([&toInt](const List<PI> &xs) {
+        }).map([&toInt](const List<PI>& xs) {
             return xs.map(toInt);
         }) == List<List<int>>(
             List<int>(5, 4, 3, 2, 1, 0),

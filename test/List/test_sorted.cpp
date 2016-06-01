@@ -9,10 +9,10 @@ TEST_CASE("test List sorted", "[List][sorted]") {
 
     using PI = std::unique_ptr<int>;
 
-    static const auto ltP = [](const PI &x, const PI &y) { return *x < *y; };
+    static const auto ltP = [](const PI& x, const PI& y) { return *x < *y; };
     static const auto gtI = [](int x, int y) { return x > y; };
-    static const auto gtP = [](const PI &x, const PI &y) { return *x > *y; };
-    static const auto toInt = [](const PI &p) { return *p; };
+    static const auto gtP = [](const PI& x, const PI& y) { return *x > *y; };
+    static const auto toInt = [](const PI& p) { return *p; };
 
     SECTION("empty List") {
         List<int> xs;
@@ -48,11 +48,11 @@ TEST_CASE("test List sorted", "[List][sorted]") {
             List<int>(2, 0, 8, 1, 5, 4, 9, 7, 3, 6),
             List<int>(4, 7, 3, 8, 1, 6, 0, 2, 5, 9)
         );
-        REQUIRE(xss1.forall([](const List<int> &xs) {
+        REQUIRE(xss1.forall([](const List<int>& xs) {
             return xs.sorted() == List<int>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9) &&
                    xs.sorted(true) == List<int>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
         }));
-        REQUIRE(xss1.forall([](const List<int> &xs) {
+        REQUIRE(xss1.forall([](const List<int>& xs) {
             return xs.sorted(gtI) == List<int>(9, 8, 7, 6, 5, 4, 3, 2, 1, 0) &&
                    xs.sorted(gtI, true) == List<int>(9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
         }));
@@ -63,36 +63,36 @@ TEST_CASE("test List sorted", "[List][sorted]") {
             List<int>(2, 0, 2, 3, 4, 4, 0, 3, 1, 1),
             List<int>(1, 0, 3, 4, 2, 2, 0, 4, 1, 3)
         );
-        REQUIRE(xss2.forall([](const List<int> &xs) {
+        REQUIRE(xss2.forall([](const List<int>& xs) {
             return xs.sorted() == List<int>(0, 0, 1, 1, 2, 2, 3, 3, 4, 4) &&
                    xs.sorted(true) == List<int>(0, 0, 1, 1, 2, 2, 3, 3, 4, 4);
         }));
-        REQUIRE(xss2.forall([](const List<int> &xs) {
+        REQUIRE(xss2.forall([](const List<int>& xs) {
             return xs.sorted(gtI) == List<int>(4, 4, 3, 3, 2, 2, 1, 1, 0, 0) &&
                    xs.sorted(gtI, true) == List<int>(4, 4, 3, 3, 2, 2, 1, 1, 0, 0);
         }));
 
-        const auto yss1 = xss1.map([](const List<int> &xs) {
+        const auto yss1 = xss1.map([](const List<int>& xs) {
             return xs.map([](int x) { return PI(new int(x)); });
         });
-        REQUIRE(yss1.forall([](const List<PI> &ys) {
+        REQUIRE(yss1.forall([](const List<PI>& ys) {
             return ys.sorted(ltP).map(toInt) == List<int>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9) &&
                    ys.sorted(ltP, true).map(toInt) == List<int>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
         }));
-        REQUIRE(yss1.forall([](const List<PI> &ys) {
+        REQUIRE(yss1.forall([](const List<PI>& ys) {
             return ys.sorted(gtP).map(toInt) == List<int>(9, 8, 7, 6, 5, 4, 3, 2, 1, 0) &&
                    ys.sorted(gtP, true).map(toInt) == List<int>(9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
         }));
 
 
-        const auto yss2 = xss2.map([](const List<int> &xs) {
+        const auto yss2 = xss2.map([](const List<int>& xs) {
             return xs.map([](int x) { return PI(new int(x)); });
         });
-        REQUIRE(yss2.forall([](const List<PI> &ys) {
+        REQUIRE(yss2.forall([](const List<PI>& ys) {
             return ys.sorted(ltP).map(toInt) == List<int>(0, 0, 1, 1, 2, 2, 3, 3, 4, 4) &&
                    ys.sorted(ltP, true).map(toInt) == List<int>(0, 0, 1, 1, 2, 2, 3, 3, 4, 4);
         }));
-        REQUIRE(yss2.forall([](const List<PI> &ys) {
+        REQUIRE(yss2.forall([](const List<PI>& ys) {
             return ys.sorted(gtP).map(toInt) == List<int>(4, 4, 3, 3, 2, 2, 1, 1, 0, 0) &&
                    ys.sorted(gtP, true).map(toInt) == List<int>(4, 4, 3, 3, 2, 2, 1, 1, 0, 0);
         }));
@@ -101,7 +101,7 @@ TEST_CASE("test List sorted", "[List][sorted]") {
         struct Foo {
             Foo(int val) noexcept : val_(val) {}
             int val() const { return val_; }
-            bool operator<(const Foo &) const { return false; }
+            bool operator<(const Foo&) const { return false; }
         private:
             const int val_;
         };
@@ -113,7 +113,7 @@ TEST_CASE("test List sorted", "[List][sorted]") {
             List<int>(4, 7, 3, 8, 1, 6, 0, 2, 5, 9),
             List<int>(9, 3, 2, 5, 6, 8, 7, 0, 4, 1)
         );
-        const auto yss = xss.map([](const List<int> &xs) {
+        const auto yss = xss.map([](const List<int>& xs) {
             return xs.map([](int x) { return Foo(x); });
         });
         REQUIRE(yss.size() == 5);
