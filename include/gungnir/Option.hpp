@@ -33,27 +33,27 @@ template<typename T, typename Impl>
 class OptionBase {
 public:
     bool isEmpty() const;
-    T * ptr() const;
+    T* ptr() const;
     void clear();
 
     operator bool() const { return !impl().isEmpty(); }
 
-    operator T *() { return impl().ptr(); }
-    operator const T *() const { return impl().ptr(); }
+    operator T*() { return impl().ptr(); }
+    operator const T*() const { return impl().ptr(); }
 
-    T & operator*() { return *impl().ptr(); }
-    const T & operator*() const { return *impl().ptr(); }
+    T& operator*() { return *impl().ptr(); }
+    const T& operator*() const { return *impl().ptr(); }
 
-    T * operator->() { return impl().ptr(); }
-    const T * operator->() const { return impl().ptr(); }
+    T* operator->() { return impl().ptr(); }
+    const T* operator->() const { return impl().ptr(); }
 
-    bool operator==(T *that) const { return impl().ptr() == that; }
-    bool operator!=(T *that) const { return impl().ptr() != that; }
-    bool operator==(const OptionBase &that) const { return impl().ptr() == that.impl().ptr(); }
-    bool operator!=(const OptionBase &that) const { return impl().ptr() != that.impl().ptr(); }
+    bool operator==(T* that) const { return impl().ptr() == that; }
+    bool operator!=(T* that) const { return impl().ptr() != that; }
+    bool operator==(const OptionBase& that) const { return impl().ptr() == that.impl().ptr(); }
+    bool operator!=(const OptionBase& that) const { return impl().ptr() != that.impl().ptr(); }
 
-    T & get() { return *impl().ptr(); }
-    const T & get() const { return *impl().ptr(); }
+    T& get() { return *impl().ptr(); }
+    const T& get() const { return *impl().ptr(); }
 
     template<
         typename T1 = T,
@@ -78,14 +78,14 @@ public:
     template<typename Fn>
     UnownedOption<T> filter(Fn p)
     {
-        T *ptr = impl().ptr();
+        const T* ptr = impl().ptr();
         return UnownedOption<T>(ptr && p(*ptr) ? ptr : nullptr);
     }
 
     template<typename Fn>
     UnownedOption<const T> filter(Fn p) const
     {
-        T *ptr = impl().ptr();
+        const T* ptr = impl().ptr();
         return UnownedOption<const T>(ptr && p(*ptr) ? ptr : nullptr);
     }
 
@@ -166,8 +166,8 @@ public:
 private:
     template<typename, typename> friend class OptionBase;
 
-    Impl & impl() { return static_cast<Impl &>(*this); }
-    const Impl & impl() const { return static_cast<const Impl &>(*this); }
+    Impl& impl() { return static_cast<Impl&>(*this); }
+    const Impl& impl() const { return static_cast<const Impl&>(*this); }
 };
 
 }  // namespace detail
@@ -191,9 +191,9 @@ public:
         : empty_(!(new (&storage_) T(std::forward<Args>(args)...)))
     {}
 
-    Option(const Option &) = delete;
+    Option(const Option&) = delete;
 
-    Option(Option &&that) noexcept
+    Option(Option&& that) noexcept
         : empty_(that.empty_ || !(new (&storage_) T(std::move(that.get()))))
     {
         that.clear();
@@ -204,9 +204,9 @@ public:
         clear();
     }
 
-    Option & operator=(const Option &) = delete;
+    Option& operator=(const Option&) = delete;
 
-    Option & operator=(Option &&that)
+    Option& operator=(Option&& that)
     {
         empty_ = that.empty_ || !(new (&storage_) T(std::move(that.get())));
         that.clear();
@@ -218,9 +218,9 @@ public:
         return empty_;
     }
 
-    T * ptr() const
+    T* ptr() const
     {
-        return empty_ ? nullptr : reinterpret_cast<T *>(&storage_);
+        return empty_ ? nullptr : reinterpret_cast<T*>(&storage_);
     }
 
     void clear()
@@ -249,24 +249,24 @@ class UnownedOption final
     , public std::iterator<std::forward_iterator_tag, T> {
 
 public:
-    explicit UnownedOption(T *ptr = nullptr) noexcept : ptr_(ptr) {}
+    explicit UnownedOption(T* ptr = nullptr) noexcept : ptr_(ptr) {}
 
-    UnownedOption(const UnownedOption &) = default;
+    UnownedOption(const UnownedOption&) = default;
 
-    UnownedOption(UnownedOption &&that) noexcept : ptr_(that.ptr_)
+    UnownedOption(UnownedOption&& that) noexcept : ptr_(that.ptr_)
     {
         that.ptr_ = nullptr;
     }
 
-    UnownedOption & operator=(const UnownedOption &) = default;
+    UnownedOption& operator=(const UnownedOption&) = default;
 
-    UnownedOption & operator=(UnownedOption &&that)
+    UnownedOption& operator=(UnownedOption&& that)
     {
         ptr_ = that.ptr_;
         that.ptr_ = nullptr;
     }
 
-    UnownedOption & operator++()
+    UnownedOption& operator++()
     {
         ptr_ = nullptr;
         return *this;
@@ -274,7 +274,7 @@ public:
 
     UnownedOption operator++(int)
     {
-        T *old = ptr_;
+        T* old = ptr_;
         ptr_ = nullptr;
         return UnownedOption(old);
     }
@@ -284,7 +284,7 @@ public:
         return !ptr_;
     }
 
-    T * ptr() const
+    T* ptr() const
     {
         return ptr_;
     }
@@ -295,7 +295,7 @@ public:
     }
 
 private:
-    T *ptr_;
+    T* ptr_;
 };
 
 }  // namespace gungnir

@@ -119,16 +119,16 @@ public:
     {}
 
     /** @brief Default copy constructor. */
-    List(const List &) = default;
+    List(const List&) = default;
 
     /** @brief Default move constructor. */
-    List(List &&) = default;
+    List(List&&) = default;
 
     /** @brief Default copy assignment operator. */
-    List & operator=(const List &) = default;
+    List& operator=(const List&) = default;
 
     /** @brief Default move assignment operator. */
-    List & operator=(List &&) = default;
+    List& operator=(List&&) = default;
 
     /**
      * @brief Returns `true` if this list contains no elements, `false` otherwise.
@@ -156,7 +156,7 @@ public:
      * @return the first element of this list
      * @throws std::out_of_range if this list is empty
      */
-    const A & head() const
+    const A& head() const
     {
         if (isEmpty()) {
             throw std::out_of_range("head of empty list");
@@ -198,7 +198,7 @@ public:
      * @return the last element of this list
      * @throws std::out_of_range if this list is empty
      */
-    const A & last() const
+    const A& last() const
     {
         if (isEmpty()) {
             throw std::out_of_range("last of empty list");
@@ -229,7 +229,7 @@ public:
     template<typename Fn>
     void foreach(Fn f) const
     {
-        foreachImpl([&f](const Ptr<A> &x) { f(*x); });
+        foreachImpl([&f](const Ptr<A>& x) { f(*x); });
     }
 
     /**
@@ -249,7 +249,7 @@ public:
 
         std::vector<Ptr<B>> buf;
         buf.reserve(size());
-        foreachImpl([&buf, &ff](const Ptr<A> &x) {
+        foreachImpl([&buf, &ff](const Ptr<A>& x) {
             buf.emplace_back(std::make_shared<const B>(ff(*x)));
         });
 
@@ -273,7 +273,7 @@ public:
     List filter(Fn p) const
     {
         std::vector<Ptr<A>> buf;
-        foreachImpl([&p, &buf](const Ptr<A> &x) {
+        foreachImpl([&p, &buf](const Ptr<A>& x) {
             if (p(*x)) {
                 buf.emplace_back(x);
             }
@@ -298,7 +298,7 @@ public:
     template<typename Fn>
     List filterNot(Fn p) const
     {
-        return filter([&p](const A &x) { return !p(x); });
+        return filter([&p](const A& x) { return !p(x); });
     }
 
     /**
@@ -309,7 +309,7 @@ public:
     List reverse() const
     {
         auto hd = Node::create();
-        foreachImpl([&hd](const Ptr<A> &x) {
+        foreachImpl([&hd](const Ptr<A>& x) {
             hd = Node::create(x, std::move(hd));
         });
         return List(size(), std::move(hd));
@@ -454,8 +454,8 @@ public:
     List<B> flatMap(Fn f) const
     {
         std::vector<Ptr<B>> buf;
-        foreachImpl([&f, &buf](const Ptr<A> &x) {
-            f(*x).foreachImpl([&buf](const Ptr<B> &y) {
+        foreachImpl([&f, &buf](const Ptr<A>& x) {
+            f(*x).foreachImpl([&buf](const Ptr<B>& y) {
                 buf.emplace_back(y);
             });
         });
@@ -478,8 +478,8 @@ public:
     List<B> flatten() const
     {
         std::vector<Ptr<B>> buf;
-        foreachImpl([&buf](const Ptr<List<B>> &ys) {
-            ys->foreachImpl([&buf](const Ptr<B> &y) {
+        foreachImpl([&buf](const Ptr<List<B>>& ys) {
+            ys->foreachImpl([&buf](const Ptr<B>& y) {
                 buf.emplace_back(y);
             });
         });
@@ -538,7 +538,7 @@ public:
      * @return `true` if this list has an element that is equal
      *         (as determined by `==`) to `x`, `false` otherwise
      */
-    bool contains(const A &x) const
+    bool contains(const A& x) const
     {
         for (auto n = node_.get(); n->head; n = n->tail.get()) {
             if (*(n->head) == x) {
@@ -556,10 +556,10 @@ public:
      * @return the number of elements of this list that are equal
      *         (as determined by `==`) to `x`
      */
-    std::size_t count(const A &x) const
+    std::size_t count(const A& x) const
     {
         std::size_t num = 0;
-        foreachImpl([&x, &num](const Ptr<A> &y) {
+        foreachImpl([&x, &num](const Ptr<A>& y) {
             if (*y == x) {
                 ++num;
             }
@@ -580,7 +580,7 @@ public:
     std::size_t count(Fn p) const
     {
         std::size_t num = 0;
-        foreachImpl([&p, &num](const Ptr<A> &y) {
+        foreachImpl([&p, &num](const Ptr<A>& y) {
             if (p(*y)) {
                 ++num;
             }
@@ -614,7 +614,7 @@ public:
      *             in the returned list
      * @return a list resulting from concatenating this list and `that`
      */
-    List concat(const List &that) const
+    List concat(const List& that) const
     {
         if (isEmpty()) {
             return that;
@@ -624,7 +624,7 @@ public:
 
         std::vector<Ptr<A>> buf;
         buf.reserve(size());
-        foreachImpl([&buf](const Ptr<A> &x) {
+        foreachImpl([&buf](const Ptr<A>& x) {
             buf.emplace_back(x);
         });
 
@@ -712,7 +712,7 @@ public:
     template<typename B, typename Fn>
     B foldLeft(B z, Fn op) const
     {
-        foreachImpl([&z, &op](const Ptr<A> &x) {
+        foreachImpl([&z, &op](const Ptr<A>& x) {
             z = op(std::move(z), *x);
         });
         return z;
@@ -733,9 +733,9 @@ public:
     template<typename B, typename Fn>
     B foldRight(B z, Fn op) const
     {
-        std::vector<const A *> buf;
+        std::vector<const A*> buf;
         buf.reserve(size());
-        foreachImpl([&buf](const Ptr<A> &x) {
+        foreachImpl([&buf](const Ptr<A>& x) {
             buf.emplace_back(&*x);
         });
 
@@ -754,7 +754,7 @@ public:
     A sum() const
     {
         A acc = 0;
-        foreachImpl([&acc](const Ptr<A> &x) {
+        foreachImpl([&acc](const Ptr<A>& x) {
             acc += *x;
         });
         return acc;
@@ -770,7 +770,7 @@ public:
     A product() const
     {
         A acc = 1;
-        foreachImpl([&acc](const Ptr<A> &x) {
+        foreachImpl([&acc](const Ptr<A>& x) {
             acc *= *x;
         });
         return acc;
@@ -789,7 +789,7 @@ public:
      */
     List sorted(bool stable = false) const
     {
-        return sorted([](const A &x, const A &y) { return x < y; }, stable);
+        return sorted([](const A& x, const A& y) { return x < y; }, stable);
     }
 
     /**
@@ -811,11 +811,11 @@ public:
     {
         std::vector<Ptr<A>> buf;
         buf.reserve(size());
-        foreachImpl([&buf](const Ptr<A> &x) {
+        foreachImpl([&buf](const Ptr<A>& x) {
             buf.emplace_back(x);
         });
 
-        auto comp = [&lt](const Ptr<A> &x, const Ptr<A> &y) {
+        auto comp = [&lt](const Ptr<A>& x, const Ptr<A>& y) {
             return lt(*x, *y);
         };
         if (stable) {
@@ -839,7 +839,7 @@ public:
      */
     List<std::reference_wrapper<const A>> cref() const
     {
-        return map([](const A &x) { return std::cref(x); });
+        return map([](const A& x) { return std::cref(x); });
     }
 
     /**
@@ -858,7 +858,7 @@ public:
      *         corresponding elements in pairs
      */
     template<typename B>
-    List<std::pair<A, B>> zip(const List<B> &that) const
+    List<std::pair<A, B>> zip(const List<B>& that) const
     {
         using AB = std::pair<A, B>;
 
@@ -922,7 +922,7 @@ public:
         std::vector<Ptr<B>> acc;
         acc.reserve(size() + 1);
         acc.emplace_back(std::make_shared<B>(std::move(z)));
-        foreachImpl([&acc, &op] (const Ptr<A> &x) {
+        foreachImpl([&acc, &op] (const Ptr<A>& x) {
             acc.emplace_back(std::make_shared<B>(op(*acc.back(), *x)));
         });
 
@@ -947,9 +947,9 @@ public:
     template<typename B, typename Fn>
     List<B> scanRight(B z, Fn op) const
     {
-        std::vector<const A *> buf;
+        std::vector<const A*> buf;
         buf.reserve(size());
-        foreachImpl([&buf](const Ptr<A> &x) {
+        foreachImpl([&buf](const Ptr<A>& x) {
             buf.emplace_back(x.get());
         });
 
@@ -1040,9 +1040,9 @@ public:
             throw std::out_of_range("reduceRight on empty list");
         }
 
-        std::vector<const A *> buf;
+        std::vector<const A*> buf;
         buf.reserve(size());
-        foreachImpl([&buf] (const Ptr<A> &x) {
+        foreachImpl([&buf] (const Ptr<A>& x) {
             buf.emplace_back(x.get());
         });
 
@@ -1077,7 +1077,7 @@ public:
      * @return `true` if `that` contains the same elements as this list
      *         in the same order, `false` otherwise
      */
-    bool operator==(const List<A> &that) const
+    bool operator==(const List<A>& that) const
     {
         if (this == &that) {
             return true;
@@ -1102,7 +1102,7 @@ public:
      * @return `true` if `that` does not contains the same elements as this list
      *         in the same order, `false` otherwise
      */
-    bool operator!=(const List<A> &that) const
+    bool operator!=(const List<A>& that) const
     {
         return !(*this == that);
     }
@@ -1188,20 +1188,20 @@ class List<A>::StdIterator final
     : public std::iterator<std::forward_iterator_tag,
                            A,
                            std::ptrdiff_t,
-                           const A *,
-                           const A &> {
+                           const A*,
+                           const A&> {
 public:
     /** @brief Default copy constructor. */
-    StdIterator(const StdIterator &) = default;
+    StdIterator(const StdIterator&) = default;
 
     /** @brief Default move constructor. */
-    StdIterator(StdIterator &) = default;
+    StdIterator(StdIterator&) = default;
 
     /** @brief Default copy assignment operator. */
-    StdIterator & operator=(const StdIterator &) = default;
+    StdIterator& operator=(const StdIterator&) = default;
 
     /** @brief Default move assignment operator. */
-    StdIterator & operator=(StdIterator &&) = default;
+    StdIterator& operator=(StdIterator&&) = default;
 
     /**
      * @brief Tests whether two iterators point to the same element.
@@ -1209,7 +1209,7 @@ public:
      * @return `true` if this iterator and `that` point to the same element,
      *         `false` otherwise
      */
-    bool operator==(const StdIterator &that) const
+    bool operator==(const StdIterator& that) const
     {
         return node_->head == that.node_->head;
     }
@@ -1220,7 +1220,7 @@ public:
      * @return `true` if this iterator and `that` point to different elements,
      *         `false` otherwise
      */
-    bool operator!=(const StdIterator &that) const
+    bool operator!=(const StdIterator& that) const
     {
         return node_->head != that.node_->head;
     }
@@ -1230,7 +1230,7 @@ public:
      *
      * @return a reference to this iterator
      */
-    StdIterator & operator++()
+    StdIterator& operator++()
     {
         node_ = node_->tail.get();
         return *this;
@@ -1253,7 +1253,7 @@ public:
      *
      * @return a reference to the element this iterator points to
      */
-    const A & operator*() const
+    const A& operator*() const
     {
         return *node_->head;
     }
@@ -1263,7 +1263,7 @@ public:
      *
      * @return a pointer to the element this iterator points to
      */
-    const A * operator->() const
+    const A* operator->() const
     {
         return node_->head.get();
     }
@@ -1271,9 +1271,9 @@ public:
 private:
     friend class List;
 
-    explicit StdIterator(const Node *node) noexcept : node_(node) {}
+    explicit StdIterator(const Node* node) noexcept : node_(node) {}
 
-    const Node *node_;
+    const Node* node_;
 };
 
 /// @cond GUNGNIR_PRIVATE
@@ -1300,11 +1300,11 @@ public:
         , tail(std::move(tail))
     {}
 
-    Node(const Node &) = delete;
-    Node(Node &&) = delete;
+    Node(const Node&) = delete;
+    Node(Node&&) = delete;
 
-    Node & operator=(const Node &) = delete;
-    Node & operator=(Node &&) = delete;
+    Node& operator=(const Node&) = delete;
+    Node& operator=(Node&&) = delete;
 
     const Ptr<A> head;
     const Ptr<Node> tail;
